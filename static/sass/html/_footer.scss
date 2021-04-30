@@ -1,0 +1,29 @@
+/*
+    FOOTER
+*/
+
+footer{
+    align-content: center;
+    background: $primary_dark;
+    display: flex;
+    margin-top: $p;
+    min-height: 200px;
+    .footer-content {
+        color: white;
+        font-weight: 100;
+        font-family: sans-serif;
+        margin: auto;
+        max-width: 750px;
+        @media (max-width: $main-width) {
+            max-width: 250px;
+        }
+        p {
+            color: white;
+            margin-bottom: $p;
+            &:last-child { margin-bottom: 0px; }
+        }
+        a {
+            color: $secondary_light;
+        }
+    }
+}

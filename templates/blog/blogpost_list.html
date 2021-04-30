@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block meta_description%}
+    Find all the posted content on the website ordered by date.
+{% endblock meta_description %}
+
+{% block title %}Blog Posts{% endblock title %}
+
+{% block header %}Blog Posts{% endblock header %}
+
+{% block main %}
+    {% for blog_post in object_list %}
+        <article>
+            <time datetime="{{blog_post.created_at}}">
+                {{blog_post.format_date}}
+            </time>
+            <div class="article-data">
+                <h2>
+                    {{blog_post.title}}
+                </h2>
+                <p>
+                    {{blog_post.content | truncatewords:40}}
+                </p>
+                <a class="btn" href="{{blog_post.get_absolute_url}}">
+                    READ
+                </a>
+            </div>
+        </article>
+    {% empty %}
+        <article>
+            <div class="article_content">
+                <p>There are no posts yet</p>
+            </div>
+        </article>
+    {% endfor %}
+{% endblock main %}

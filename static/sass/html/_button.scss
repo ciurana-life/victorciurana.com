@@ -1,0 +1,39 @@
+/*
+    BUTTON
+*/
+
+.btn {
+    align-self: flex-start;
+    background: $secondary_light;
+    border-radius: 4px;
+    display: inline-block;
+    clip-path: polygon(100% 0, 100% 100%, 100% 100%, 0% 100%, 0% 100%, 0% 0%);
+    font-family: sans-serif;
+    font-size: 17px;
+    font-weight: 300;
+    letter-spacing: 2px;
+    padding: $p/2 $p*2;
+    position: relative;
+    transition: all .25s linear;
+
+    &:hover {
+        clip-path: polygon(95% 0, 100% 50%, 95% 100%, 0% 100%, 5% 50%, 0% 0%);
+    }
+    &:before {
+        background: $secondary_dark;
+        background: linear-gradient(124deg, $secondary_dark 0%, rgba(199,120,0,0) 100%);
+        border-radius: 4px;
+        bottom: 0px;
+        content:"";
+        display: block;
+        position: absolute;
+        transition: all .25s ease-out;
+        opacity: .5;
+        left: 0px;
+        width: 0%;
+        height: 40px;
+    }
+    &:hover:before {
+        width: 100%;
+    }
+}

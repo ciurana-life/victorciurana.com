@@ -1,0 +1,13 @@
+/*
+    MAIN and, html, body
+*/
+
+body, html {
+    background: rgba(244,244,244, 0.5);
+}
+
+main {
+    margin: auto;
+    max-width: $main-width;
+    min-height: 90vh;
+}

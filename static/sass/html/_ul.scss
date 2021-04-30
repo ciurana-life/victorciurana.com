@@ -1,0 +1,23 @@
+/*
+    UL, LI
+*/
+
+ul {
+    padding-left: $p;
+    li {
+        margin-bottom: $p/2;
+        &::before{
+            background: $primary_light;
+            background: linear-gradient(12deg, $primary_dark 0%, $primary_light 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            content: "~";
+            color: transparent;
+            display: inline-block;
+            font-family: sans-serif;
+            font-size: 20px;
+            line-height: 20px;
+            margin-right: $p/2;
+        }
+    }
+}

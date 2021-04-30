@@ -1,0 +1,17 @@
+/*
+    HEADER
+*/
+
+header {
+    #pre-header {
+        background: rgb(28,49,58);
+        background: linear-gradient(117deg, rgba(28,49,58,1) 0%, rgba(113,135,146,1) 57%, rgba(255,217,91,0.7) 79%, rgba(113,135,146,1) 96%);
+        box-shadow: 0 -1px 14px 0px rgba(111, 132, 143, 0.5);
+        height: 5px;
+    }
+    border-bottom: 1px solid lightgrey;
+    h1 {
+        margin: auto;
+        max-width: $main-width;
+    }
+}

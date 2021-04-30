@@ -1,0 +1,23 @@
+/*
+    LINK
+*/
+
+@mixin link() {
+    color: $secondary_dark;
+    box-shadow:
+        inset 0px -1px 0px 0px $secondary_dark,
+        0px 1px 0px 0px  $secondary_dark;
+    display: inline-block;
+    transition: all .15s linear;
+    &:hover {
+        color: black;
+        box-shadow:
+            inset 0px -25px 0px 0px $secondary_dark,
+            0px 1px 0px 0px  $secondary_dark;
+        }
+}
+
+.link,
+.article_content a{
+    @include link;
+}

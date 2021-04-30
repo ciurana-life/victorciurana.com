@@ -1,0 +1,62 @@
+/*
+    FONTS
+*/
+
+p, ul, address {
+    color: black;
+    font-family: sans-serif;
+    font-size: 16px;
+    line-height: 20px;
+    font-style: normal;
+}
+
+@mixin header-text($font-size) {
+    background: #1c313a;
+    background: linear-gradient(12deg, #1c313a 0%, #718792 100%);
+    background-clip: text;
+    box-sizing: border-box;
+    -webkit-background-clip: text;
+    color: transparent;
+    font-size: $font-size;
+    font-weight: 100;
+    letter-spacing: -0.75px;
+    line-height: 42px;
+}
+
+@mixin header-paddings() {
+    padding: $p*2 $p;
+    @media (max-width: $main-width) {
+        padding: $p $p/2;
+    }
+}
+
+h1 {
+    @include header-text(55px);
+    @include header-paddings;
+    transition: font-size .75s ease-in-out;
+    transition-delay: .25s;
+}
+h2.header-padding,
+h3.header-padding {
+    @include header-paddings;
+}
+
+h2 {
+    @include header-text(35px);
+}
+h3 {
+    @include header-text(25px);
+}
+
+@media (max-width: $main-width) {
+    h1 {
+        font-size: 45px;
+    }
+    h2 {
+        line-height: 34px;
+    }
+    p, ul, address {
+        font-size: 15px;
+        line-height: 19px;
+    }
+}
