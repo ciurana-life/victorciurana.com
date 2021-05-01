@@ -46,6 +46,9 @@ article {
     h2, h3, p, ul {
         margin-bottom: $p;
     }
+    h2 {
+        margin-top: $p * 2;
+    }
     .article_content {
         box-sizing: border-box;
         padding: $p;
@@ -65,6 +68,7 @@ article {
             box-sizing: border-box;
             padding: 0px 8px 0px 0;
             overflow: scroll;
+            margin: 25px 0;
         }
         // Numbered lines
         .hljs-ln-n:before {
@@ -91,6 +95,9 @@ article {
 @media (max-width: $main-width) {
     article {
         margin: $p/2 !important;
+        .article-data h3 {
+            line-height: 26px;
+        }
         .article_content h2,
         .article_content p,
         .article_content ul {
