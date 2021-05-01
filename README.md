@@ -68,6 +68,13 @@ Reload nginx:
 sudo systemctl reload nginx
 ```
 
+For reloading the app after any change:
+```
+sudo systemctl restart gunicorn-victorciurana.com
+```
+
+Follow [this post](https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-20-04) on how to put https.
+
 ### TODO ###
 TODO:
 * Make tests for the home page view.
