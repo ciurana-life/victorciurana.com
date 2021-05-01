@@ -46,14 +46,14 @@ article {
     h2, h3, p, ul {
         margin-bottom: $p;
     }
-    h2 {
-        margin-top: $p * 2;
-    }
     .article_content {
         box-sizing: border-box;
         padding: $p;
         overflow: scroll;
         width: 100%;
+        h2 {
+            margin-top: $p * 2;
+        }
         hr {
             border-bottom: 1px solid lightgrey;
             border-top: 0;
