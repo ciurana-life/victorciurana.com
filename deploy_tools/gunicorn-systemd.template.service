@@ -9,7 +9,7 @@ EnvironmentFile=/home/admin/victorciurana.com/.env
 
 ExecStart=/home/admin/victorciurana.com/env/bin/gunicorn \
     --bind unix:/tmp/victorciurana.com.socket \
-    superlists.wsgi:application
+    app.wsgi:application
 
 [Install]
 WantedBy=multi-user.target
