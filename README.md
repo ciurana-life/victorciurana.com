@@ -19,9 +19,17 @@ source env/bin/activate
 pip -r requirements.txt
 ```
 
+*create .env file with required variables*
+
 Collect static:
 ```
 ./manage.py collectstatic --no-input
+```
+
+Migrations:
+```
+./manage.py makemigrations
+./manage.py migrate
 ```
 
 Run the project with:

@@ -11,6 +11,7 @@ class BlogPost(models.Model):
     slug = models.SlugField(null=False, unique=True, editable=False)
     content = MartorField(null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
+    meta_description = models.CharField(max_length=300, null=True)
 
     def __str__(self):
         return f'BlogPost - {self.title[:20]}...'

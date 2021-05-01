@@ -1,0 +1,15 @@
+[Unit]
+Description=Gunicorn server for victorciurana.com
+
+[Service]
+Restart=on-failure
+User=admin
+WorkingDirectory=/home/admin/victorciurana.com
+EnvironmentFile=/home/admin/victorciurana.com/.env
+
+ExecStart=/home/admin/victorciurana.com/env/bin/gunicorn \
+    --bind unix:/tmp/victorciurana.com.socket \
+    superlists.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
