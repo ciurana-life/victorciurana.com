@@ -1,9 +1,7 @@
 from django.db import models
-from django.urls import reverse
 from django.template.defaultfilters import slugify
-
+from django.urls import reverse
 from martor.models import MartorField
-
 
 
 class BlogPost(models.Model):
@@ -14,13 +12,13 @@ class BlogPost(models.Model):
     meta_description = models.CharField(max_length=300, null=True)
 
     def __str__(self):
-        return f'BlogPost - {self.title[:20]}...'
+        return f"BlogPost - {self.title[:20]}..."
 
     def get_absolute_url(self) -> str:
-        return reverse('blogpost_detail', kwargs={'slug': self.slug})
+        return reverse("blogpost_detail", kwargs={"slug": self.slug})
 
     def format_date(self) -> str:
-        return f'{self.created_at:%Y %m %d}'
+        return f"{self.created_at:%Y %m %d}"
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -32,4 +30,4 @@ class HomePageContent(models.Model):
     content = MartorField(null=True)
 
     def __str__(self):
-        return 'Home page content'
+        return "Home page content"
