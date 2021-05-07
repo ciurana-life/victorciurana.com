@@ -15,7 +15,7 @@ class BlogPost(models.Model):
         return f"BlogPost - {self.title[:20]}..."
 
     def get_absolute_url(self) -> str:
-        return reverse("blogpost_detail", kwargs={"slug": self.slug})
+        return reverse("blogpost_detail", args=[self.slug])
 
     def format_date(self) -> str:
         return f"{self.created_at:%Y %m %d}"

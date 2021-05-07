@@ -1,8 +1,12 @@
-from django.urls import path
+from django.urls import re_path
 
 from .views import *
 
 urlpatterns = [
-    path("posts/", BlogPostListView.as_view(), name="blogpost_list"),
-    path("<slug:slug>/", BlogPostDetailView.as_view(), name="blogpost_detail"),
+    re_path(r"posts/", BlogPostListView.as_view(), name="blogpost_list"),
+    re_path(
+        r"(?P<slug>[-a-zA-Z0-9_]+)/$",
+        BlogPostDetailView.as_view(),
+        name="blogpost_detail",
+    ),
 ]

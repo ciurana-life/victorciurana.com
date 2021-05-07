@@ -1,62 +1,68 @@
-from django.test import Client, RequestFactory, TestCase
+import pytest
+from django.test import Client, RequestFactory
 
 from blog.models import BlogPost
 from blog.views import BlogPostDetailView, BlogPostListView, HomePageView
 
 
-class HomePageTest(TestCase):
-    def setUp(self):
-        self.factory = RequestFactory()
-
-    def test_home_page_returns_correct_html(self):
-        request = self.factory.get("/")
-        response = HomePageView.as_view()(request)
-        html = response.rendered_content
-        self.assertTrue(html.startswith("<!DOCTYPE html>"))
-        self.assertIn("<title>Victor Ciurana</title>", html)
-        self.assertTrue(html.endswith("</html>"))
-        self.assertEqual(response.status_code, 200)
+# SetUp
+@pytest.fixture()
+def blog_post():
+    blog_post = BlogPost.objects.create(title="test post", content="some content")
+    return blog_post
 
 
-class BlogPostListViewTest(TestCase):
-    def setUp(self):
-        self.client = Client()
-        self.factory = RequestFactory()
-
-    def test_html_response(self):
-        request = self.factory.get("/blog/posts/")
-        response = BlogPostListView.as_view()(request)
-        html = response.rendered_content
-        self.assertIn("<title>Blog Posts</title>", html)
-
-    def test_response_with_no_posts(self):
-        response = self.client.get("/blog/posts/")
-        self.assertTemplateUsed(response, "blog/blogpost_list.html")
-        self.assertFalse(response.context_data["object_list"])
-        self.assertEqual(response.status_code, 200)
-
-    def test_response_with_post(self):
-        bp = BlogPost.objects.create(title="Lorem ipsum")
-        response = self.client.get("/blog/posts/")
-        self.assertTrue(response.context_data["object_list"])
-        self.assertIn(bp, response.context_data["object_list"])
-        self.assertEqual(response.status_code, 200)
+""" HOME """
 
 
-class BlogPostDetailViewTest(TestCase):
-    def setUp(self):
-        self.factory = RequestFactory()
-        self.bp = BlogPost.objects.create(title="this is a test", content="lorem ipsum")
+@pytest.mark.django_db
+def test_home_page_returns_correct_html():
+    request = RequestFactory().get("/")
+    response = HomePageView.as_view()(request)
+    html = response.rendered_content
+    assert html.startswith("<!DOCTYPE html>") == True
+    assert "<title>Victor Ciurana</title>" in html
+    assert html.endswith("</html>") == True
+    assert response.status_code == 200
 
-    def test_page_renders_ok(self):
-        request = self.factory.get(self.bp.get_absolute_url)
-        response = BlogPostDetailView.as_view()(request, pk=1)
-        html = response.rendered_content
-        self.assertTrue(html.startswith("<!DOCTYPE html>"))
-        self.assertIn("<title>this is a test</title>", html)
-        self.assertIn('<div class="article_content">', html)
-        self.assertTrue(html.endswith("</html>"))
-        self.assertEqual(response.status_code, 200)
 
-    def test_date_is_formatted_ok(self):
-        pass
+""" POST LIST """
+
+
+@pytest.mark.django_db
+def test_blog_post_list_view_returns_correct_html():
+    request = RequestFactory().get("/blog/posts/")
+    response = BlogPostListView.as_view()(request)
+    html = response.rendered_content
+    assert "<title>Blog Posts</title>" in html
+
+
+@pytest.mark.django_db
+def test_blog_post_list_view_response_with_no_posts():
+    response = Client().get("/blog/posts/")
+    assert "blog/blogpost_list.html" in (t.name for t in response.templates)
+    assert len(response.context_data["object_list"]) == 0
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_blog_post_list_view_response_with_post(blog_post):
+    response = Client().get("/blog/posts/")
+    assert len(response.context_data["object_list"]) == 1
+    assert blog_post in response.context_data["object_list"]
+    assert response.status_code == 200
+
+
+""" POST DETAIL """
+
+
+@pytest.mark.django_db
+def test_blog_post_detail_view_returns_correct_html(blog_post):
+    request = RequestFactory().get(blog_post.get_absolute_url)
+    response = BlogPostDetailView.as_view()(request, pk=1)
+    html = response.rendered_content
+    assert html.startswith("<!DOCTYPE html>") == True
+    assert "<title>this is a test</title>" in html
+    assert '<div class="article_content">' in html
+    assert html.endswith("</html>") == True
+    assert response.status_code == 200

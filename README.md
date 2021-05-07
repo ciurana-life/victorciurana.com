@@ -77,8 +77,5 @@ Follow [this post](https://www.digitalocean.com/community/tutorials/how-to-secur
 
 ### TODO ###
 TODO:
-* Make tests for the home page view.
-* Make test for the no-cookie view.
-* Settings for deploy with env.
-* Nginx, gunicorn files for deploy.
-* More.
+* Tox, and write how to run tests with it and pytest
+* Create Makefile for all the commands and deployment

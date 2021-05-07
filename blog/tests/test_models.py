@@ -1,33 +1,40 @@
 from datetime import datetime
 
+import pytest
 from django.test import TestCase
 
 from blog.models import BlogPost
 
 
-class BlogPostModelTest(TestCase):
-    def setUp(self):
-        self.bp = BlogPost.objects.create(
-            title="test post", slug="test_post", content="some content"
-        )
+# SetUp
+@pytest.fixture()
+def blog_post():
+    blog_post = BlogPost.objects.create(title="test post", content="some content")
+    return blog_post
 
-    def test_object_created_ok(self):
-        bp = BlogPost.objects.first()
-        self.assertEqual(bp.slug, "test_post")
-        self.assertIsInstance(bp.created_at, datetime)
 
-    def test_get_absolute_url(self):
-        absolute_url = self.bp.get_absolute_url()
-        self.assertIsInstance(absolute_url, str)
-        self.assertEqual(absolute_url, "/blog/test_post/")
+@pytest.mark.django_db
+def test_blog_post_created_ok(blog_post):
+    bp = BlogPost.objects.first()
+    assert bp.slug == "test-post"
+    assert type(bp.created_at) == datetime
 
-    def test_auto_slug_from_title(self):
-        bp = BlogPost.objects.create(
-            title="Lorem ipsum",
-        )
-        self.assertEqual(bp.slug, "lorem-ipsum")
 
-    def test_format_date_function(self):
-        bp = BlogPost.objects.create(title="Lorem ipsum")
-        self.assertIsInstance(bp.format_date(), str)
-        self.assertTrue(len(bp.format_date()), 10)
+@pytest.mark.django_db
+def test_get_absolute_url(blog_post):
+    absolute_url = blog_post.get_absolute_url()
+    assert type(absolute_url) == str
+    assert absolute_url == "/blog/test-post/"
+
+
+@pytest.mark.django_db
+def test_aut_slug_from_title():
+    bp = BlogPost.objects.create(title="Lorem ipsum")
+    assert bp.slug == "lorem-ipsum"
+
+
+@pytest.mark.django_db
+def test_format_date_function():
+    bp = BlogPost.objects.create(title="Lorem ipsum")
+    assert type(bp.format_date()) == str
+    assert len(bp.format_date()) == 10
