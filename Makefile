@@ -1,0 +1,23 @@
+ENV = env/bin/
+PIP = $(ENV)/pip
+MANAGE = $(ENV)/python3 manage.py
+
+local_install:
+	@echo "Starting local install..."
+	python3 -m venv env
+	$(PIP) install -r requirements.txt
+	echo "DEBUG=True" >> .env
+	$(MANAGE) collectstatic --no-input
+	$(MANAGE) makemigrations blog
+	$(MANAGE) migrate
+	@echo "local_install ended, you can now run: make local_run"
+
+local_run:
+	$(MANAGE) runserver
+
+server_install:
+	@echo "Server install"
+
+server_update:
+	git pull
+	sudo systemctl restart gunicorn-victorciurana.com
