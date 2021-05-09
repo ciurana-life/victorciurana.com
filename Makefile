@@ -23,4 +23,6 @@ server_install:
 
 server_update:
 	git pull
+	$(MANAGE) makemigrations blog
+	$(MANAGE) migrate
 	sudo systemctl restart gunicorn-victorciurana.com
