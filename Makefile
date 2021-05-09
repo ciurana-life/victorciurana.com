@@ -8,6 +8,7 @@ local_install:
 	$(PIP) install -r requirements.txt
 	echo "DEBUG=True" >> .env
 	$(MANAGE) collectstatic --no-input
+	$(MANAGE) makemigrations
 	$(MANAGE) makemigrations blog
 	$(MANAGE) migrate
 	@echo "local_install ended, you can now run: make local_run"
@@ -23,6 +24,7 @@ server_install:
 
 server_update:
 	git pull
+	$(MANAGE) makemigrations
 	$(MANAGE) makemigrations blog
 	$(MANAGE) migrate
 	sudo systemctl restart gunicorn-victorciurana.com

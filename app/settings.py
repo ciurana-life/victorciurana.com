@@ -32,6 +32,8 @@ INSTALLED_APPS = [
     "django_sass",
     "martor",
     "blog",
+    "django_otp",
+    "django_otp.plugins.otp_totp",
 ]
 
 MARTOR_THEME = "bootstrap"
@@ -63,6 +65,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django_otp.middleware.OTPMiddleware",
 ]
 
 ROOT_URLCONF = "app.urls"
