@@ -1,6 +1,6 @@
 ENV = env/bin/
-PIP = $(ENV)/pip
-MANAGE = $(ENV)/python3 manage.py
+PIP = $(ENV)pip
+MANAGE = $(ENV)python3 manage.py
 
 local_install:
 	@echo "Starting local install..."
@@ -14,6 +14,9 @@ local_install:
 
 local_run:
 	$(MANAGE) runserver
+
+secret:
+	$(ENV)python3 -c "import secrets; print(f'SECRET_KEY={secrets.token_urlsafe(100)}')" >> .env
 
 server_install:
 	@echo "Server install"
