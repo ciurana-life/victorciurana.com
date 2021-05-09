@@ -24,6 +24,7 @@ server_install:
 
 server_update:
 	git pull
+	$(PIP) install -r requirements.txt
 	$(MANAGE) makemigrations
 	$(MANAGE) makemigrations blog
 	$(MANAGE) migrate

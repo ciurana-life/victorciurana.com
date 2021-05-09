@@ -6,7 +6,7 @@ from django_otp.admin import OTPAdminSite
 
 from blog import views
 
-# admin.site.__class__ = OTPAdminSite
+admin.site.__class__ = OTPAdminSite
 
 urlpatterns = [
     re_path(r"^$", views.HomePageView.as_view(), name="home"),
