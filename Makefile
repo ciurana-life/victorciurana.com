@@ -2,6 +2,44 @@ ENV = env/bin/
 PIP = $(ENV)pip
 MANAGE = $(ENV)python3 manage.py
 
+# Define colors
+ifneq (,$(findstring xterm,${TERM}))
+	RED          := $(shell tput -Txterm setaf 1)
+	GREEN        := $(shell tput -Txterm setaf 2)
+	RESET := $(shell tput -Txterm sgr0)
+else
+	RED          := ""
+	GREEN        := ""
+	RESET        := ""
+endif
+
+# You can use colors like this:
+# @echo "${RED}RED${RESET}"
+
+### Easy to use Docker commands ###
+
+d_local_install:
+	@echo "${GREEN}[#] STARTING LOCAL DOCKER INSTALL${RESET}"
+	chmod +x entrypoint.sh
+	docker-compose build
+	docker-compose up -d --build
+	docker-compose exec web python manage.py makemigrations
+	docker-compose exec web python manage.py makemigrations blog
+	docker-compose exec web python manage.py migrate --noinput
+	docker-compose exec web python manage.py createsuperuser --noinput
+	@echo "${GREEN}[#] Docker is up and running${RESET}"
+	@echo "${GREEN}[#] An admin user was created:${RESET}"
+	@echo "${GREEN}[#]     user: asuka${RESET}"
+	@echo "${GREEN}[#]     password: eva02${RESET}"
+	@echo "${GREEN}[#] You can now go to http://127.0.0.1:8000${RESET}"
+
+
+d_local_remove:
+	@echo "${RED}[#] REMOVING LOCAL DOCKER INSTALL${RESET}"
+	docker-compose -f docker-compose.yml down -v
+	@echo "${RED}[#] The local Docker project was removed${RESET}"
+
+
 local_install:
 	@echo "Starting local install..."
 	python3 -m venv env
