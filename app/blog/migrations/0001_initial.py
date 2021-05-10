@@ -8,26 +8,41 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='BlogPost',
+            name="BlogPost",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=200, null=True)),
-                ('slug', models.SlugField(editable=False, unique=True)),
-                ('content', martor.models.MartorField(null=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True, null=True)),
-                ('meta_description', models.CharField(max_length=300, null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=200, null=True)),
+                ("slug", models.SlugField(editable=False, unique=True)),
+                ("content", martor.models.MartorField(null=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True, null=True)),
+                ("meta_description", models.CharField(max_length=300, null=True)),
             ],
         ),
         migrations.CreateModel(
-            name='HomePageContent',
+            name="HomePageContent",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('content', martor.models.MartorField(null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("content", martor.models.MartorField(null=True)),
             ],
         ),
     ]
