@@ -77,7 +77,6 @@ Follow [this post](https://www.digitalocean.com/community/tutorials/how-to-secur
 
 ### TODO ###
 TODO:
-* Tox, and write how to run tests with it and pytest
 * Create Makefile for all the commands and deployment
 * Change this file with all the new data:
     - ci, tests, etc, new requirements files
