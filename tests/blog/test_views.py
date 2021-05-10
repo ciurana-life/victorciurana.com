@@ -1,8 +1,8 @@
 import pytest
 from django.test import Client, RequestFactory
 
-from blog.models import BlogPost
-from blog.views import BlogPostDetailView, BlogPostListView, HomePageView
+from app.blog.models import BlogPost
+from app.blog.views import BlogPostDetailView, BlogPostListView, HomePageView
 
 
 # SetUp
@@ -62,7 +62,7 @@ def test_blog_post_detail_view_returns_correct_html(blog_post):
     response = BlogPostDetailView.as_view()(request, pk=1)
     html = response.rendered_content
     assert html.startswith("<!DOCTYPE html>") == True
-    assert "<title>this is a test</title>" in html
+    assert "<title>test post</title>" in html
     assert '<div class="article_content">' in html
     assert html.endswith("</html>") == True
     assert response.status_code == 200

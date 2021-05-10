@@ -3,7 +3,7 @@ from datetime import datetime
 import pytest
 from django.test import TestCase
 
-from blog.models import BlogPost
+from app.blog.models import BlogPost
 
 
 # SetUp

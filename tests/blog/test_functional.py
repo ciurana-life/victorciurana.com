@@ -4,7 +4,7 @@ from unittest import skip
 from django.test import LiveServerTestCase
 from selenium import webdriver
 
-from blog.models import BlogPost
+from app.blog.models import BlogPost
 
 
 @skip("Skipping funcional test for now")

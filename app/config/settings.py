@@ -4,7 +4,7 @@ from pathlib import Path
 import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Environment
 env = environ.Env()
@@ -31,7 +31,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_sass",
     "martor",
-    "blog",
+    "app.blog",
     "django_otp",
     "django_otp.plugins.otp_totp",
 ]
@@ -68,7 +68,7 @@ MIDDLEWARE = [
     "django_otp.middleware.OTPMiddleware",
 ]
 
-ROOT_URLCONF = "app.urls"
+ROOT_URLCONF = "app.config.urls"
 
 TEMPLATES = [
     {
@@ -86,7 +86,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "app.wsgi.application"
+WSGI_APPLICATION = "app.config.wsgi.application"
 
 
 # Database
