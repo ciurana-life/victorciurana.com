@@ -77,8 +77,8 @@ Follow [this post](https://www.digitalocean.com/community/tutorials/how-to-secur
 
 ### TODO ###
 TODO:
-* Create Makefile for all the commands and deployment
-* Change this file with all the new data:
-    - ci, tests, etc, new requirements files
-* makefile needs to create .env file with DEBUG on local install
-
+* Make changes so that my server still runs the code and serves the page.
+* Specify how to run with make, and how to istall make.
+* Make needs the sass command for developing.
+* Docker prod configuration
+* REST

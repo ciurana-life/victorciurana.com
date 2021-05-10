@@ -5,10 +5,12 @@ black==21.4b2
 certifi==2020.12.5
 chardet==4.0.0
 click==7.1.2
+distlib==0.3.1
 Django==3.2
 django-markdownx==3.0.1
 django-otp==1.0.5
 django-sass==1.0.1
+filelock==3.0.12
 flake8==3.9.2
 gunicorn==20.1.0
 idna==2.10
@@ -23,6 +25,7 @@ packaging==20.9
 pathspec==0.8.1
 Pillow==8.2.0
 pluggy==0.13.1
+psycopg2-binary==2.8.6
 py==1.10.0
 pycodestyle==2.7.0
 pyflakes==2.3.1
@@ -40,4 +43,6 @@ selenium==3.141.0
 six==1.15.0
 sqlparse==0.4.1
 toml==0.10.2
+tox==3.23.1
 urllib3==1.26.4
+virtualenv==20.4.6
