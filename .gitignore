@@ -3,9 +3,12 @@
 # Learn more about .gitignore:
 #     https://www.atlassian.com/git/tutorials/saving-changes/gitignore
 
+.secrets
+
 # envs -caches
 .pytest_cache
 .env
+.tox
 
 # My tools
 package-lock.json
