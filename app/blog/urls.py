@@ -1,6 +1,6 @@
 from django.urls import re_path
 
-from .views import *
+from .views import BlogPostDetailView, BlogPostListView
 
 urlpatterns = [
     re_path(r"posts/", BlogPostListView.as_view(), name="blogpost_list"),
