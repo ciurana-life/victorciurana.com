@@ -60,8 +60,8 @@ ENVPROD_DB = .envs/.prod/.env.prod.db
 ENVPRODTMP_DB = $(ENVPROD_DB).tmp
 decrypt_env:
 	@echo "${GREEN}[#] DECRYPTING ENV FILES"
-	sops --decrypt $(ENVPROD) >> $(ENVPRODTMP) && rm $(ENVPROD) && $(ENVPRODTMP) $(ENVPROD)
-	sops --decrypt $(ENVPROD_DB) >> $(ENVPRODTMP_DB) && rm $(ENVPROD_DB) && $(ENVPRODTMP_DB) $(ENVPROD_DB)
+	sops --decrypt $(ENVPROD) >> $(ENVPRODTMP) && rm $(ENVPROD) && mv $(ENVPRODTMP) $(ENVPROD)
+	sops --decrypt $(ENVPROD_DB) >> $(ENVPRODTMP_DB) && rm $(ENVPROD_DB) && mv $(ENVPRODTMP_DB) $(ENVPROD_DB)
 
 GCPKEY = projects/victor-ciurana-com/locations/global/keyRings/victorciurana-keyring/cryptoKeys/victorciuranacom-key
 encrypt_env:
