@@ -29,12 +29,15 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django_sass",
     "martor",
     "app.blog",
     "django_otp",
     "django_otp.plugins.otp_totp",
 ]
+
+# Nothing more permanent than a temporary fix
+if DEBUG:
+    INSTALLED_APPS += "django_sass"
 
 MARTOR_THEME = "bootstrap"
 
