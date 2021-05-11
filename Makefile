@@ -33,12 +33,40 @@ d_local_install:
 	@echo "${GREEN}[#]     password: eva02${RESET}"
 	@echo "${GREEN}[#] You can now go to http://127.0.0.1:8000${RESET}"
 
-
 d_local_remove:
 	@echo "${RED}[#] REMOVING LOCAL DOCKER INSTALL${RESET}"
-	docker-compose -f docker-compose.yml down -v
+	docker-compose down -v
 	@echo "${RED}[#] The local Docker project was removed${RESET}"
 
+d_prod_install:
+	@echo "${GREEN}[#] STARTING RPOD DOCKER INSTALL${RESET}"
+	docker-compose -f docker-compose.prod.yml build
+	docker-compose -f docker-compose.prod.yml up -d --build
+	docker-compose exec web python manage.py makemigrations
+	docker-compose exec web python manage.py makemigrations blog
+	docker-compose exec web python manage.py migrate --noinput
+	docker-compose exec web python manage.py createsuperuser --noinput
+	@echo "${RED} [#] STILL DEBUGGING DOCKER WIP ${RESET}"
+
+d_prod_remove:
+	@echo "${RED}[#] REMOVING PROD DOCKER INSTALL${RESET}"
+	docker-compose -f docker-compose.prod.yml down -v
+	@echo "${RED}[#] The prod Docker project was removed${RESET}"
+
+ENVPROD = .envs/.prod/.env.prod
+ENVPRODTMP = $(ENVPROD).tmp
+ENVPROD_DB = .envs/.prod/.env.prod.db
+ENVPRODTMP_DB = $(ENVPROD_DB).tmp
+decrypt_env:
+	@echo "${GREEN}[#] DECRYPTING ENV FILES"
+	sops --decrypt $(ENVPROD) >> $(ENVPRODTMP) && rm $(ENVPROD) && $(ENVPRODTMP) $(ENVPROD)
+	sops --decrypt $(ENVPROD_DB) >> $(ENVPRODTMP_DB) && rm $(ENVPROD_DB) && $(ENVPRODTMP_DB) $(ENVPROD_DB)
+
+GCPKEY = projects/victor-ciurana-com/locations/global/keyRings/victorciurana-keyring/cryptoKeys/victorciuranacom-key
+encrypt_env:
+	@echo "${GREEN}[#] ENCRYPTING ENV FILES"
+	sops --encrypt --gcp-kms $(GCPKEY) $(ENVPROD) > $(ENVPRODTMP) && rm $(ENVPROD) && mv $(ENVPRODTMP) $(ENVPROD)
+	sops --encrypt --gcp-kms $(GCPKEY) $(ENVPROD_DB) > $(ENVPRODTMP_DB) && rm $(ENVPROD_DB) && mv $(ENVPRODTMP_DB) $(ENVPROD_DB)
 
 local_install:
 	@echo "Starting local install..."
