@@ -43,7 +43,6 @@ d_prod_install:
 	chmod +x entrypoint.prod.sh
 	docker-compose -f docker-compose.prod.yml build
 	docker-compose -f docker-compose.prod.yml up -d --build
-	docker-compose exec web python manage.py makemigrations
 	docker-compose exec web python manage.py makemigrations blog
 	docker-compose exec web python manage.py migrate --noinput
 	docker-compose exec web python manage.py createsuperuser --noinput
