@@ -40,6 +40,7 @@ d_local_remove:
 
 d_prod_install:
 	@echo "${GREEN}[#] STARTING RPOD DOCKER INSTALL${RESET}"
+	docker pull nginx:1.19.0-alpine
 	chmod +x entrypoint.prod.sh
 	docker-compose -f docker-compose.prod.yml build
 	docker-compose -f docker-compose.prod.yml up -d --build
