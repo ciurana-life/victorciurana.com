@@ -2,9 +2,8 @@ import pytest
 from django.http import response
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.test import APIRequestFactory
 
-from app.blog.models import BlogPost, HomePageContent
+from app.blog.models import HomePageContent
 from app.blog.views import BlogPostDetailView
 from app.config.settings import REST_FRAMEWORK
 
@@ -26,18 +25,6 @@ def test_home_page_content_always_returns_last_or_empty(client):
 
 
 """ BLOG POSTS """
-
-# SetUp
-@pytest.fixture
-def blog_posts():
-    for _ in range(20):
-        BlogPost.objects.create(title=f"title_{_}", content="Lorem")
-
-
-@pytest.fixture
-def factory():
-    factory = APIRequestFactory()
-    return factory
 
 
 def test_pagination_setting_10():

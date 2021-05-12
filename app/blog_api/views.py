@@ -1,4 +1,5 @@
 from rest_framework import generics
+from rest_framework.filters import OrderingFilter
 
 from app.blog.models import BlogPost, HomePageContent
 
@@ -24,6 +25,8 @@ class BlogPostListView(generics.ListAPIView):
 
     queryset = BlogPost.objects.all()
     serializer_class = BlogPostSerializer
+    filter_backends = [OrderingFilter]
+    ordering_fields = ["created_at"]
 
 
 class BlogPostDetailView(generics.RetrieveAPIView):

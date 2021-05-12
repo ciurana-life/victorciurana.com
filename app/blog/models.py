@@ -25,9 +25,6 @@ class BlogPost(models.Model):
             self.slug = slugify(self.title)
         return super().save(*args, **kwargs)
 
-    class Meta:
-        ordering = ["-created_at"]
-
 
 class HomePageContent(models.Model):
     content = MartorField(null=True)
