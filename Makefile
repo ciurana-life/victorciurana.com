@@ -1,6 +1,3 @@
-ENV = env/bin/
-PIP = $(ENV)pip
-MANAGE = $(ENV)python3 manage.py
 
 # Define colors
 ifneq (,$(findstring xterm,${TERM}))
@@ -73,22 +70,21 @@ encrypt_env:
 	sops --encrypt --gcp-kms $(GCPKEY) $(ENVPROD) > $(ENVPRODTMP) && rm $(ENVPROD) && mv $(ENVPRODTMP) $(ENVPROD)
 	sops --encrypt --gcp-kms $(GCPKEY) $(ENVPROD_DB) > $(ENVPRODTMP_DB) && rm $(ENVPROD_DB) && mv $(ENVPRODTMP_DB) $(ENVPROD_DB)
 
+
+MANAGE = poetry run ./manage.py
 local_install:
 	@echo "Starting local install..."
-	python3 -m venv env
-	$(PIP) install -r requirements/requirements_dev.txt
-	echo "DEBUG=True" >> .env
 	$(MANAGE) collectstatic --no-input
 	$(MANAGE) makemigrations
 	$(MANAGE) makemigrations blog
 	$(MANAGE) migrate
-	@echo "local_install ended, you can now run: make local_run"
+	@echo "local_install ended, ${GREEN}you can now run: make local_run${RESET}"
 
 local_run:
 	$(MANAGE) runserver
 
 secret:
-	$(ENV)python3 -c "import secrets; print(f'SECRET_KEY={secrets.token_urlsafe(100)}')" >> .env
+	poetry run python3 -c "import secrets; print(f'SECRET_KEY={secrets.token_urlsafe(100)}')" >> .env
 
 server_install:
 	@echo "Server install"

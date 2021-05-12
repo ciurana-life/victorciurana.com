@@ -82,3 +82,28 @@ TODO:
 * Make needs the sass command for developing.
 * Docker prod configuration
 * REST
+
+### TMP changing to poetry ###
+Prerequisites:
+Install (poetry)[https://python-poetry.org/docs/#installation]
+```
+https://python-poetry.org/docs/#installation
+```
+
+Once you have poetry you have to open a shell and install the requirements:
+```
+poetry shell
+poetry install
+```
+
+You can exit the shell with just ```exit```.
+
+Now you can run a make command that will do the intial settings:
+```
+make local_install
+```
+
+Finally you can run the development server with:
+```
+make local_run
+```
