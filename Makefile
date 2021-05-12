@@ -43,10 +43,14 @@ d_prod_install:
 	chmod +x entrypoint.prod.sh
 	docker-compose -f docker-compose.prod.yml build
 	docker-compose -f docker-compose.prod.yml up -d --build
-	docker-compose exec web python manage.py makemigrations blog
 	docker-compose exec web python manage.py migrate --noinput
 	docker-compose exec web python manage.py createsuperuser --noinput
-	@echo "${RED} [#] STILL DEBUGGING DOCKER WIP ${RESET}"
+	docker-compose exec web python manage.py collectstatic --noinput
+	@echo "${GREEN}[#] Docker is up and running${RESET}"
+	@echo "${GREEN}[#] An admin user was created:${RESET}"
+	@echo "${GREEN}[#]     user: asuka${RESET}"
+	@echo "${GREEN}[#]     password: eva02${RESET}"
+	@echo "${GREEN}[#] You can now go to http://127.0.0.1:1337${RESET}"
 
 d_prod_remove:
 	@echo "${RED}[#] REMOVING PROD DOCKER INSTALL${RESET}"
