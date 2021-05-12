@@ -30,14 +30,16 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "martor",
-    "app.blog",
+    "rest_framework",
     "django_otp",
     "django_otp.plugins.otp_totp",
+    "app.blog",
+    "app.blog_api",
 ]
 
 # Nothing more permanent than a temporary fix
 if DEBUG:
-    INSTALLED_APPS += "django_sass"
+    INSTALLED_APPS.append("django_sass")
 
 MARTOR_THEME = "bootstrap"
 
@@ -153,3 +155,15 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+REST_FRAMEWORK = {
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 10,
+    "DEFAULT_PERMISSION_CLASSES": [],
+    "TEST_REQUEST_DEFAULT_FORMAT": "json",
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.AnonRateThrottle",
+        "rest_framework.throttling.UserRateThrottle",
+    ],
+    "DEFAULT_THROTTLE_RATES": {"anon": "100/minute", "user": "1000/minute"},
+}

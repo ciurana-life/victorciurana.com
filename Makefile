@@ -76,7 +76,7 @@ encrypt_env:
 local_install:
 	@echo "Starting local install..."
 	python3 -m venv env
-	$(PIP) install -r requirements.txt
+	$(PIP) install -r requirements/requirements_dev.txt
 	echo "DEBUG=True" >> .env
 	$(MANAGE) collectstatic --no-input
 	$(MANAGE) makemigrations
