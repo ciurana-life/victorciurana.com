@@ -30,7 +30,8 @@ RUN apk update \
 # Install dependencies
 RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
 RUN poetry config virtualenvs.create false
-RUN poetry install --no-dev
+# RUN poetry install --no-dev
+RUN poetry install
 
 # Copy entrypoint.sh
 COPY ./entrypoint.sh .
