@@ -1,4 +1,3 @@
-
 # Define colors
 ifneq (,$(findstring xterm,${TERM}))
 	RED          := $(shell tput -Txterm setaf 1)
@@ -14,21 +13,27 @@ endif
 # @echo "${RED}RED${RESET}"
 
 ### Easy to use Docker commands ###
-
+D_MANAGE = docker-compose exec web python manage.py
 d_local_install:
 	@echo "${GREEN}[#] STARTING LOCAL DOCKER INSTALL${RESET}"
 	chmod +x entrypoint.sh
 	docker-compose build
 	docker-compose up -d --build
-	docker-compose exec web python manage.py makemigrations
-	docker-compose exec web python manage.py makemigrations blog
-	docker-compose exec web python manage.py migrate --noinput
-	docker-compose exec web python manage.py createsuperuser --noinput
+	$(D_MANAGE) makemigrations
+	$(D_MANAGE) makemigrations blog
+	$(D_MANAGE) migrate --noinput
+	$(D_MANAGE) createsuperuser --noinput
 	@echo "${GREEN}[#] Docker is up and running${RESET}"
 	@echo "${GREEN}[#] An admin user was created:${RESET}"
 	@echo "${GREEN}[#]     user: asuka${RESET}"
 	@echo "${GREEN}[#]     password: eva02${RESET}"
 	@echo "${GREEN}[#] You can now go to http://127.0.0.1:8000${RESET}"
+
+d_scss:
+	$(D_MANAGE) sass static/sass/ templates/static/css/ --watch -t compressed
+
+d_test:
+	docker-compose exec web pytest --black app --flake8
 
 d_local_remove:
 	@echo "${RED}[#] REMOVING LOCAL DOCKER INSTALL${RESET}"
@@ -41,9 +46,9 @@ d_prod_install:
 	chmod +x entrypoint.prod.sh
 	docker-compose -f docker-compose.prod.yml build
 	docker-compose -f docker-compose.prod.yml up -d --build
-	docker-compose exec web python manage.py migrate --noinput
-	docker-compose exec web python manage.py createsuperuser --noinput
-	docker-compose exec web python manage.py collectstatic --noinput
+	$(D_MANAGE) migrate --noinput
+	$(D_MANAGE) createsuperuser --noinput
+	$(D_MANAGE) collectstatic --noinput
 	@echo "${GREEN}[#] Docker is up and running${RESET}"
 	@echo "${GREEN}[#] An admin user was created:${RESET}"
 	@echo "${GREEN}[#]     user: asuka${RESET}"
@@ -55,6 +60,8 @@ d_prod_remove:
 	docker-compose -f docker-compose.prod.yml down -v
 	@echo "${RED}[#] The prod Docker project was removed${RESET}"
 
+
+### Encrypt and decrypt commands for secret variables ###
 ENVPROD = .envs/.prod/.env.prod
 ENVPRODTMP = $(ENVPROD).tmp
 ENVPROD_DB = .envs/.prod/.env.prod.db
@@ -71,6 +78,7 @@ encrypt_env:
 	sops --encrypt --gcp-kms $(GCPKEY) $(ENVPROD_DB) > $(ENVPRODTMP_DB) && rm $(ENVPROD_DB) && mv $(ENVPRODTMP_DB) $(ENVPROD_DB)
 
 
+### Commands to run without docker ###
 MANAGE = poetry run ./manage.py
 local_install:
 	@echo "Starting local install..."
@@ -83,12 +91,11 @@ local_install:
 local_run:
 	$(MANAGE) runserver
 
-secret:
-	poetry run python3 -c "import secrets; print(f'SECRET_KEY={secrets.token_urlsafe(100)}')" >> .env
-
+# TODO - Victor -Change
 server_install:
 	@echo "Server install"
 
+# TODO - Victor - Change
 server_update:
 	git pull
 	$(PIP) install -r requirements.txt

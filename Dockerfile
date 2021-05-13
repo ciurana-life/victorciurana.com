@@ -9,14 +9,14 @@ WORKDIR /usr/src/app
 ENV PYTHONDONTWRITEBYTECODE 1
 # Prevents Python from buffering stdout and stder
 ENV PYTHONUNBUFFERED 1
+
 # Poetry
 ENV POETRY_HOME="/opt/poetry"
 ENV VENV_PATH="/opt/pysetup/.venv"
-# prepend poetry and venv to path
+# Prepend poetry and venv to path
 ENV PATH="$POETRY_HOME/bin:$VENV_PATH/bin:$PATH"
-# Prevent no python found
 ENV PYTHONPATH=${PYTHONPATH}:${PWD}
-# Prevent runtime error
+# Copy python libs to install
 COPY poetry.lock pyproject.toml ./
 
 # Install Pillow dependencies (fuck_you!)
@@ -30,7 +30,6 @@ RUN apk update \
 # Install dependencies
 RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
 RUN poetry config virtualenvs.create false
-# RUN poetry install --no-dev
 RUN poetry install
 
 # Copy entrypoint.sh
