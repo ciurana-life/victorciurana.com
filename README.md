@@ -89,3 +89,4 @@ Follow [this post](https://www.digitalocean.com/community/tutorials/how-to-secur
 ### TODO ###
 TODO:
 * Deploy still on workings
+https://testdriven.io/blog/django-lets-encrypt/
