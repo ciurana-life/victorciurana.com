@@ -53,7 +53,7 @@ d_prod_install:
 	@echo "${GREEN}[#] An admin user was created:${RESET}"
 	@echo "${GREEN}[#]     user: asuka${RESET}"
 	@echo "${GREEN}[#]     password: eva02${RESET}"
-	@echo "${GREEN}[#] You can now go to http://127.0.0.1:1337${RESET}"
+	@echo "${GREEN}[#] You can now go to https://victorciurana.com${RESET}"
 
 d_prod_remove:
 	@echo "${RED}[#] REMOVING PROD DOCKER INSTALL${RESET}"
@@ -61,7 +61,7 @@ d_prod_remove:
 	@echo "${RED}[#] The prod Docker project was removed${RESET}"
 
 
-### Encrypt and decrypt commands for secret variables ###
+### Encrypt and decrypt commands for secret variables (call from d_prod_install) ###
 ENVPROD = .envs/.prod/.env.prod
 ENVPRODTMP = $(ENVPROD).tmp
 ENVPROD_DB = .envs/.prod/.env.prod.db
@@ -70,13 +70,14 @@ decrypt_env:
 	@echo "${GREEN}[#] DECRYPTING ENV FILES"
 	sops --decrypt $(ENVPROD) >> $(ENVPRODTMP) && rm $(ENVPROD) && mv $(ENVPRODTMP) $(ENVPROD)
 	sops --decrypt $(ENVPROD_DB) >> $(ENVPRODTMP_DB) && rm $(ENVPROD_DB) && mv $(ENVPRODTMP_DB) $(ENVPROD_DB)
+	@echo "-- ${RESET}"
 
 GCPKEY = projects/victor-ciurana-com/locations/global/keyRings/victorciurana-keyring/cryptoKeys/victorciuranacom-key
 encrypt_env:
 	@echo "${GREEN}[#] ENCRYPTING ENV FILES"
 	sops --encrypt --gcp-kms $(GCPKEY) $(ENVPROD) > $(ENVPRODTMP) && rm $(ENVPROD) && mv $(ENVPRODTMP) $(ENVPROD)
 	sops --encrypt --gcp-kms $(GCPKEY) $(ENVPROD_DB) > $(ENVPRODTMP_DB) && rm $(ENVPROD_DB) && mv $(ENVPRODTMP_DB) $(ENVPROD_DB)
-
+	@echo "-- ${RESET}"
 
 ### Commands to run without docker ###
 MANAGE = poetry run ./manage.py
@@ -90,16 +91,3 @@ local_install:
 
 local_run:
 	$(MANAGE) runserver
-
-# TODO - Victor -Change
-server_install:
-	@echo "Server install"
-
-# TODO - Victor - Change
-server_update:
-	git pull
-	$(PIP) install -r requirements.txt
-	$(MANAGE) makemigrations
-	$(MANAGE) makemigrations blog
-	$(MANAGE) migrate
-	sudo systemctl restart gunicorn-victorciurana.com
