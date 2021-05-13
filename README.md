@@ -90,3 +90,12 @@ Follow [this post](https://www.digitalocean.com/community/tutorials/how-to-secur
 TODO:
 * Deploy still on workings
 https://testdriven.io/blog/django-lets-encrypt/
+
+-- Staging delpoyment
+```
+docker-compose -f docker-compose.staging.yml up -d --build
+```
+bring it down
+```
+docker-compose -f docker-compose.staging.yml down -v
+```
