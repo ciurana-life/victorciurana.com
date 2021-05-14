@@ -40,11 +40,44 @@ d_local_remove:
 	docker-compose down -v
 	@echo "${RED}[#] The local Docker project was removed${RESET}"
 
+# RUN ONLY ON FRESH VM THAT HAS NOTHING (amd64 Debian)
+# [1] Runs all the commands here:https://docs.docker.com/engine/install/debian/
+#     to install Docker
+# [2] Logs in to gcloud
+d_prod_install_all:
+	@echo "${GREEN}[# 1] Installing Docker... ${RESET}"
+	sudo apt-get update
+	sudo apt-get install \
+		apt-transport-https \
+		ca-certificates \
+		curl \
+		gnupg \
+		lsb-release -y
+	curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+	echo \
+		"deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
+		$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+	sudo apt-get update
+	sudo apt-get install docker-ce docker-ce-cli containerd.io -y
+	@echo "${GREEN}[# 1] Running Docker hello world ${RESET}"
+	sudo docker run hello-world
+	@echo "${GREEN}[# 1] If you saw the hello world, you are done :) ${RESET}"
+	@echo "${GREEN}[# 2] Loging in to gcloud please follow terminal instructions ${RESET}"
+	gcloud auth login
+	gcloud auth configure-docker
+	@echo "${GREEN}[# 2] Gcloud login and config done :) ${RESET}"
+
+
 d_prod_install:
 	@echo "${GREEN}[#] STARTING RPOD DOCKER INSTALL${RESET}"
 	docker pull nginx:1.19.0-alpine
 	chmod +x entrypoint.prod.sh
-	docker-compose -f docker-compose.prod.yml build
+	docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy:latest
+	docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx:latest
+	docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest
+	docker pull eu.gcr.io/victor-ciurana-com/jrcs/letsencrypt-nginx-proxy-companion:latest
+	docker pull eu.gcr.io/victor-ciurana-com/redis-v:latest
+	docker pull eu.gcr.io/victor-ciurana-com/postgres:latest
 	docker-compose -f docker-compose.prod.yml up -d --build
 	$(D_MANAGE) migrate --noinput
 	$(D_MANAGE) createsuperuser --noinput
@@ -54,6 +87,17 @@ d_prod_install:
 	@echo "${GREEN}[#]     user: asuka${RESET}"
 	@echo "${GREEN}[#]     password: eva02${RESET}"
 	@echo "${GREEN}[#] You can now go to https://victorciurana.com${RESET}"
+
+d_prod_update:
+	@echo "${GREEN}[#] Updating docker${RESET}"
+	docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy:latest
+	docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx:latest
+	docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest
+	docker pull eu.gcr.io/victor-ciurana-com/jrcs/letsencrypt-nginx-proxy-companion:latest
+	docker pull eu.gcr.io/victor-ciurana-com/redis-v:latest
+	docker pull eu.gcr.io/victor-ciurana-com/postgres:latest
+	docker-compose -f docker-compose.prod.yml up -d --build
+	@echo "${GREEN}[#] Done :)${RESET}"
 
 d_prod_remove:
 	@echo "${RED}[#] REMOVING PROD DOCKER INSTALL${RESET}"
