@@ -53,37 +53,7 @@ Now you can run normal manage commands with:
 poetry run ./manage.py YOUR_COMMAND
 ```
 
-### Deploy notes tmp ###
-Move the nginx conf to /etc/nginx/sites-available/, then run:
-```
-cd ../sites-enabled
-sudo ln -s ../victorciurana.com .
-```
 
-Move gunicorn conf:
-```
-mv deploy_tools/gunicorn-systemd.template.service /etc/systemd/system/gunicorn-victorciurana.com.service
-sudo systemctl daemon-reload
-sudo systemctl enable gunicorn-victorciurana.com
-sudo systemctl start gunicorn-victorciurana.com
-```
-
-Check all ok:
-```
-sudo journalctl -u gunicorn-victorciurana.com
-```
-
-Reload nginx:
-```
-sudo systemctl reload nginx
-```
-
-For reloading the app after any change:
-```
-sudo systemctl restart gunicorn-victorciurana.com
-```
-
-Follow [this post](https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-20-04) on how to put https.
 
 
 ### TODO ###
@@ -146,6 +116,29 @@ git pull
 ./manage.py makemigrations
 ```
 
+
+-- You need to do nothing from above if you push the image
+-- DOCKER how to push images
+
+Tag SOURCE_IMAGE (name | id):
+```
+docker tag SOURCE_IMAGE eu.gcr.io/victor-ciurana-com/NAME_FOR_REGISTRY
+```
+
+Push:
+```
+docker push eu.gcr.io/victor-ciurana-com/NAME_FOR_REGISTRY
+```
+
+Make sure it uploaded (from cloud console):
+```
+gcloud container images list-tags eu.gcr.io/victor-ciurana-com/NAME_FOR_REGISTRY
+```
+
+On the VM pull it:
+```
+docker pull eu.gcr.io/victor-ciurana-com/NAME_FOR_REGISTRY:latest
+```
 
 
 --- Multi stage for otp or, create a nginx path to a different admin pannel,

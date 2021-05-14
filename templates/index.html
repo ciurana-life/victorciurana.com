@@ -1,4 +1,4 @@
-{% extends  'base.html'%}
+{% extends 'base.html'%}
 {% load martortags %}
 
 {% block header %}
@@ -6,30 +6,32 @@ Victor Ciurana
 {% endblock header %}
 
 {% block main %}
-    <!-- hello -->
-    <article>
-        <div class="article_content">
-            {{home_content.content | safe_markdown}}
-        </div>
-    </article>
-    <!-- Last blog post entry -->
-    {% if blog_post %}
-        <h2 class="header-padding">Last blog post:</h2>
-        <article>
-            <time datetime="{{blog_post.created_at}}">
-                {{blog_post.format_date}}
-            </time>
-            <div class="article-data">
-                <h3>
-                    {{blog_post.title}}
-                </h3>
-                <p>
-                    {{blog_post.content | truncatewords:40}}
-                </p>
-                <a class="btn" href="{{blog_post.get_absolute_url}}">
-                    READ
-                </a>
-            </div>
-        </article>
-    {% endif %}
+<!-- hello -->
+<article>
+    <div class="article_content">
+        Docker test
+        <br>
+        {{home_content.content | safe_markdown}}
+    </div>
+</article>
+<!-- Last blog post entry -->
+{% if blog_post %}
+<h2 class="header-padding">Last blog post:</h2>
+<article>
+    <time datetime="{{blog_post.created_at}}">
+        {{blog_post.format_date}}
+    </time>
+    <div class="article-data">
+        <h3>
+            {{blog_post.title}}
+        </h3>
+        <p>
+            {{blog_post.content | truncatewords:40}}
+        </p>
+        <a class="btn" href="{{blog_post.get_absolute_url}}">
+            READ
+        </a>
+    </div>
+</article>
+{% endif %}
 {% endblock main %}

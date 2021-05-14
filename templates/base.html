@@ -1,5 +1,7 @@
-{% spaceless %}<!DOCTYPE html>
+{% spaceless %}
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,9 +10,14 @@
     The programming blog of Victor Ciurana, learning something new every day.
     {% endblock %}">
     <title>{% block title %}Victor Ciurana{% endblock %}</title>
-    <style>{% include  'static/css/styles.css' %}</style>
+    <style>
+        {
+            % include 'static/css/styles.css'%
+        }
+    </style>
     {% block css %}{% endblock css %}
 </head>
+
 <body>
     <!-- NAVIGATION -->
     <nav>
@@ -63,4 +70,5 @@
     </footer>
     {% block js %}{% endblock js %}
 </body>
+
 </html>{% endspaceless %}
