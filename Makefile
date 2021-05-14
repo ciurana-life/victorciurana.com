@@ -154,7 +154,7 @@ docker_pull:
 	docker pull eu.gcr.io/victor-ciurana-com/redis-v:latest
 	docker pull eu.gcr.io/victor-ciurana-com/postgres:latest
 
-	docker-compose -f docker-compose.prod.yml up -d
+	docker-compose -f docker-compose.prod.yml up --force-recreate --remove-orphans -d
 	docker-compose exec web python manage.py migrate --no-input
 
 	docker ps
