@@ -125,17 +125,6 @@ d_prod_install:
 	@echo "${GREEN}[#]     password: eva02${RESET}"
 	@echo "${GREEN}[#] You can now go to https://victorciurana.com${RESET}"
 
-d_prod_update:
-	@echo "${GREEN}[#] Updating docker${RESET}"
-	docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy:latest
-	docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx:latest
-	docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest
-	docker pull eu.gcr.io/victor-ciurana-com/jrcs/letsencrypt-nginx-proxy-companion:latest
-	docker pull eu.gcr.io/victor-ciurana-com/redis-v:latest
-	docker pull eu.gcr.io/victor-ciurana-com/postgres:latest
-	docker-compose -f docker-compose.prod.yml up -d --build
-	@echo "${GREEN}[#] Done :)${RESET}"
-
 d_prod_remove:
 	@echo "${RED}[#] REMOVING PROD DOCKER INSTALL${RESET}"
 	docker-compose -f docker-compose.prod.yml down -v
