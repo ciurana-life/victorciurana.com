@@ -61,10 +61,6 @@ poetry run ./manage.py YOUR_COMMAND
 ```
 
 
-
-
-### TODO ###
-
 ## Server install (GCP) ##
 Clone repo:
 ```
@@ -86,7 +82,8 @@ make d_prod_install
 make encrypt_env
 ```
 
-## On pushing images and updating (GCP)##
+
+## On pushing images and updating (GCP) ##
 To push changes to the container registry:
 ```
 # Will build, tag and push all
