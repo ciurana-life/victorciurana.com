@@ -9,6 +9,13 @@ Before you start make sure you have the following prerequisites:
     - On OSX -> ```brew install make```
     - On Ubuntu -> ```sudo apt-get install build-essential```
     - Other linux -> Google it ;)
+3. Sops:
+    ```
+    curl -j -O -L https://github.com/mozilla/sops/releases/download/v3.7.1/sops_3.7.1_amd64.deb
+    apt install ./sops_3.7.1_amd64.deb
+    rm ./sops_3.7.1_amd64.deb
+    ```
+
 
 Now you can just run the following command that will do everything for you:
 ```
@@ -63,35 +70,32 @@ Clone repo:
 ```
 git clone https://github.com/ciurana-life/victorciurana.com.git
 ```
+
 Install make (or google how to on your OS):
 ```
 sudo apt-get install build-essential
 ```
-Run:
+
+Run (with ```sudo su```):
 ```
 cd victorciurana.com/
 # Follow terminal instructions
 make d_prod_install_all
+make decrypt_env
+make d_prod_install
+make encrypt_env
 ```
 
-## DOCKER how to push images ##
-
-Tag SOURCE_IMAGE (name | id):
+## On pushing images and updating (GCP)##
+To push changes to the container registry:
 ```
-docker tag SOURCE_IMAGE eu.gcr.io/victor-ciurana-com/NAME_FOR_REGISTRY
-```
-
-Push:
-```
-docker push eu.gcr.io/victor-ciurana-com/NAME_FOR_REGISTRY
+# Will build, tag and push all
+make docker_push
 ```
 
-Make sure it uploaded (from cloud console | cloud.google.com):
+And to pull them on the VM:
 ```
-gcloud container images list-tags eu.gcr.io/victor-ciurana-com/NAME_FOR_REGISTRY
+make docker_pull
 ```
 
-On the VM pull it:
-```
-docker pull eu.gcr.io/victor-ciurana-com/NAME_FOR_REGISTRY:latest
-```
+If new images are created they need to be taged and uploaded, and the ```Makefile``` updated.

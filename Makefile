@@ -12,6 +12,24 @@ endif
 # You can use colors like this:
 # @echo "${RED}RED${RESET}"
 
+### Encrypt and decrypt commands for secret variables (call from d_prod_install) ###
+ENVPROD = .envs/.prod/.env.prod
+ENVPRODTMP = $(ENVPROD).tmp
+ENVPROD_DB = .envs/.prod/.env.prod.db
+ENVPRODTMP_DB = $(ENVPROD_DB).tmp
+decrypt_env:
+	@echo "${GREEN}[#] DECRYPTING ENV FILES"
+	sops --decrypt $(ENVPROD) >> $(ENVPRODTMP) && rm $(ENVPROD) && mv $(ENVPRODTMP) $(ENVPROD)
+	sops --decrypt $(ENVPROD_DB) >> $(ENVPRODTMP_DB) && rm $(ENVPROD_DB) && mv $(ENVPRODTMP_DB) $(ENVPROD_DB)
+	@echo "-- ${RESET}"
+
+GCPKEY = projects/victor-ciurana-com/locations/global/keyRings/victorciurana-keyring/cryptoKeys/victorciuranacom-key
+encrypt_env:
+	@echo "${GREEN}[#] ENCRYPTING ENV FILES"
+	sops --encrypt --gcp-kms $(GCPKEY) $(ENVPROD) > $(ENVPRODTMP) && rm $(ENVPROD) && mv $(ENVPRODTMP) $(ENVPROD)
+	sops --encrypt --gcp-kms $(GCPKEY) $(ENVPROD_DB) > $(ENVPRODTMP_DB) && rm $(ENVPROD_DB) && mv $(ENVPRODTMP_DB) $(ENVPROD_DB)
+	@echo "-- ${RESET}"
+
 ### Easy to use Docker commands ###
 D_MANAGE = docker-compose exec web python manage.py
 d_local_install:
@@ -41,9 +59,12 @@ d_local_remove:
 	@echo "${RED}[#] The local Docker project was removed${RESET}"
 
 # RUN ONLY ON FRESH VM THAT HAS NOTHING (amd64 Debian buster)
-# [1] Runs all the commands here:https://docs.docker.com/engine/install/debian/
+# [1] Runs all the commands here: https://docs.docker.com/engine/install/debian/
 #     to install Docker
-# [2] Logs in to gcloud
+# [2] Runs all the commands here: https://docs.docker.com/compose/install/
+#     to install docker-compose
+# [3] Logs in to gcloud
+# [4] Install sops
 d_prod_install_all:
 	@echo "${GREEN}[# 1] Installing Docker... ${RESET}"
 	sudo apt-get update
@@ -62,11 +83,27 @@ d_prod_install_all:
 	@echo "${GREEN}[# 1] Running Docker hello world ${RESET}"
 	sudo docker run hello-world
 	@echo "${GREEN}[# 1] If you saw the hello world, you are done :) ${RESET}"
-	@echo "${GREEN}[# 2] Loging in to gcloud please follow terminal instructions ${RESET}"
-	gcloud auth login
-	gcloud auth configure-docker
-	@echo "${GREEN}[# 2] Gcloud login and config done :) ${RESET}"
 
+	@echo "${GREEN}[# 2] Installing docker-compose ...${RESET}"
+	sudo curl -L "https://github.com/docker/compose/releases/download/1.29.1/docker-compose-Linux-x86_64" -o /usr/local/bin/docker-compose
+	sudo chmod +x /usr/local/bin/docker-compose
+	docker-compose --version
+	@echo "${GREEN}[# 2] If you saw the docker-compose version, you are done :) ${RESET}"
+
+	@echo "${GREEN}[# 3] Loging in to gcloud please follow terminal instructions ${RESET}"
+	gcloud auth login
+	gcloud auth application-default login
+	gcloud auth configure-docker
+	gcloud auth list
+	@echo "${GREEN}[# 3] If you see yourself on the ACTIVE ACCOUNT your are done :) ${RESET}"
+
+	@echo "${GREEN} [# 4] Installing sops ... ${RESET}"
+	curl -j -O -L https://github.com/mozilla/sops/releases/download/v3.7.1/sops_3.7.1_amd64.deb
+	apt install ./sops_3.7.1_amd64.deb
+	rm ./sops_3.7.1_amd64.deb
+	@echo "${GREEN} [# 4] Sops installed ${RESET}"
+
+	@echo "If all is green and worked run 'make decrypt_env && make d_prod_install'"
 
 d_prod_install:
 	@echo "${GREEN}[#] STARTING RPOD DOCKER INSTALL${RESET}"
@@ -104,24 +141,34 @@ d_prod_remove:
 	docker-compose -f docker-compose.prod.yml down -v
 	@echo "${RED}[#] The prod Docker project was removed${RESET}"
 
+docker_push:
+	docker-compose -f docker-compose.prod.yml build
+	docker tag victorciuranacom_nginx-proxy eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy
+	docker tag victorciuranacom_nginx eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx
+	docker tag victorciuranacom_web eu.gcr.io/victor-ciurana-com/victorciuranacom_web
+	docker tag jrcs/letsencrypt-nginx-proxy-companion eu.gcr.io/victor-ciurana-com/jrcs/letsencrypt-nginx-proxy-companion
+	docker tag redis:alpine eu.gcr.io/victor-ciurana-com/redis-v
+	docker tag postgres:12.0-alpine eu.gcr.io/victor-ciurana-com/postgres
 
-### Encrypt and decrypt commands for secret variables (call from d_prod_install) ###
-ENVPROD = .envs/.prod/.env.prod
-ENVPRODTMP = $(ENVPROD).tmp
-ENVPROD_DB = .envs/.prod/.env.prod.db
-ENVPRODTMP_DB = $(ENVPROD_DB).tmp
-decrypt_env:
-	@echo "${GREEN}[#] DECRYPTING ENV FILES"
-	sops --decrypt $(ENVPROD) >> $(ENVPRODTMP) && rm $(ENVPROD) && mv $(ENVPRODTMP) $(ENVPROD)
-	sops --decrypt $(ENVPROD_DB) >> $(ENVPRODTMP_DB) && rm $(ENVPROD_DB) && mv $(ENVPRODTMP_DB) $(ENVPROD_DB)
-	@echo "-- ${RESET}"
+	docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy
+	docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx
+	docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_web
+	docker push eu.gcr.io/victor-ciurana-com/jrcs/letsencrypt-nginx-proxy-companion
+	docker push eu.gcr.io/victor-ciurana-com/redis-v
+	docker push eu.gcr.io/victor-ciurana-com/postgres
 
-GCPKEY = projects/victor-ciurana-com/locations/global/keyRings/victorciurana-keyring/cryptoKeys/victorciuranacom-key
-encrypt_env:
-	@echo "${GREEN}[#] ENCRYPTING ENV FILES"
-	sops --encrypt --gcp-kms $(GCPKEY) $(ENVPROD) > $(ENVPRODTMP) && rm $(ENVPROD) && mv $(ENVPRODTMP) $(ENVPROD)
-	sops --encrypt --gcp-kms $(GCPKEY) $(ENVPROD_DB) > $(ENVPRODTMP_DB) && rm $(ENVPROD_DB) && mv $(ENVPRODTMP_DB) $(ENVPROD_DB)
-	@echo "-- ${RESET}"
+docker_pull:
+	docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy:latest
+	docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx:latest
+	docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest
+	docker pull eu.gcr.io/victor-ciurana-com/jrcs/letsencrypt-nginx-proxy-companion:latest
+	docker pull eu.gcr.io/victor-ciurana-com/redis-v:latest
+	docker pull eu.gcr.io/victor-ciurana-com/postgres:latest
+
+	docker-compose -f docker-compose.prod.yml up -d
+	docker-compose exec web python manage.py migrate --no-input
+
+	docker ps
 
 ### Commands to run without docker ###
 MANAGE = poetry run ./manage.py
