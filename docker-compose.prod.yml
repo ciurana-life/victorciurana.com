@@ -1,14 +1,6 @@
 version: '3.7'
 
 services:
-    nginx:
-        build: ./deploytools/nginx
-        volumes:
-            - static_volume:/home/app/web/staticfiles
-        ports:
-            - 1337:80
-        depends_on:
-            - web
 
     web:
         build:
@@ -31,9 +23,48 @@ services:
         env_file:
             - .envs/.prod/.env.prod.db
 
+    nginx:
+        build: ./deploytools/nginx
+        volumes:
+            - static_volume:/home/app/web/staticfiles
+        ports:
+            - 1337:80
+        depends_on:
+            - web
+
+    nginx-proxy:
+        container_name: nginx-proxy
+        build: ./deploytools/nginx
+        restart: always
+        ports:
+            - 443:443
+            - 80:80
+        volumes:
+            - static_volume:/home/app/web/staticfiles
+            - certs:/etc/nginx/certs
+            - html:/usr/share/nginx/html
+            - vhost:/etc/nginx/vhost.d
+            - /var/run/docker.sock:/tmp/docker.sock:ro
+        depends_on:
+            - web
+    nginx-proxy-letsencrypt:
+        image: jrcs/letsencrypt-nginx-proxy-companion
+        env_file:
+            - .envs/.staging/.env.prod.proxy-companion
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+            - certs:/etc/nginx/certs
+            - html:/usr/share/nginx/html
+            - vhost:/etc/nginx/vhost.d
+        depends_on:
+            - nginx-proxy
+
     redis:
         image: redis:alpine
 
 volumes:
     postgres_data:
     static_volume:
+    certs:
+    html:
+    vhost:
