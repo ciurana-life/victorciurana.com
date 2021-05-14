@@ -10,11 +10,7 @@
     The programming blog of Victor Ciurana, learning something new every day.
     {% endblock %}">
     <title>{% block title %}Victor Ciurana{% endblock %}</title>
-    <style>
-        {
-            % include 'static/css/styles.css'%
-        }
-    </style>
+    <style>{% include 'static/css/styles.css'%}</style>
     {% block css %}{% endblock css %}
 </head>
 
