@@ -40,7 +40,7 @@ d_local_remove:
 	docker-compose down -v
 	@echo "${RED}[#] The local Docker project was removed${RESET}"
 
-# RUN ONLY ON FRESH VM THAT HAS NOTHING (amd64 Debian)
+# RUN ONLY ON FRESH VM THAT HAS NOTHING (amd64 Debian buster)
 # [1] Runs all the commands here:https://docs.docker.com/engine/install/debian/
 #     to install Docker
 # [2] Logs in to gcloud
@@ -56,7 +56,7 @@ d_prod_install_all:
 	curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 	echo \
 		"deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
-		$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+		buster stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 	sudo apt-get update
 	sudo apt-get install docker-ce docker-ce-cli containerd.io -y
 	@echo "${GREEN}[# 1] Running Docker hello world ${RESET}"
