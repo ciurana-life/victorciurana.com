@@ -146,7 +146,8 @@ docker_push:
 
 docker_pull:
 	docker-compose -f docker-compose.prod.yml pull
-	docker-compose -f docker-compose.prod.yml up --force-recreate --remove-orphans -d
+	docker-compose -f docker-compose.prod.yml down
+	docker-compose -f docker-compose.prod.yml up
 	docker-compose exec web python manage.py migrate --no-input
 
 	docker ps
