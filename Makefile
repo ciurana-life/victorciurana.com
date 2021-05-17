@@ -128,13 +128,13 @@ d_prod_remove:
 	@echo "${RED}[#] The prod Docker project was removed${RESET}"
 
 docker_push:
+	docker-compose -f docker-compose.prod.yml build
+
 	docker tag victorciuranacom_nginx-proxy eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy
 	docker tag victorciuranacom_nginx eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx
 	docker tag victorciuranacom_web eu.gcr.io/victor-ciurana-com/victorciuranacom_web
 	docker tag postgres:12.0-alpine eu.gcr.io/victor-ciurana-com/postgres
 
-	docker-compose -f docker-compose.prod.yml build
-	docker-compose -f docker-compose.prod.yml up --force-recreate --remove-orphans -d --build
 
 	docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy
 	docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx
@@ -145,9 +145,8 @@ docker_push:
 	# not pushing anything to GCP Container Registry
 
 docker_pull:
-	docker-compose -f docker-compose.prod.yml pull
-	docker-compose -f docker-compose.prod.yml down
-	docker-compose -f docker-compose.prod.yml up
+	docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web
+	docker-compose -f docker-compose.prod.yml up -d --build
 	docker-compose exec web python manage.py migrate --no-input
 
 	docker ps
