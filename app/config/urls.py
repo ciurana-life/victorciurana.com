@@ -7,8 +7,8 @@ from django_otp.admin import OTPAdminSite
 from app.blog import views
 from app.config.settings import DEBUG
 
-# if not DEBUG:
-#     admin.site.__class__ = OTPAdminSite
+if not DEBUG:
+    admin.site.__class__ = OTPAdminSite
 
 urlpatterns = [
     re_path(r"^$", views.HomePageView.as_view(), name="home"),
