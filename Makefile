@@ -111,7 +111,8 @@ d_prod_install:
 	chmod +x entrypoint.prod.sh
 	docker-compose -f docker-compose.prod.yml pull
 	docker-compose -f docker-compose.prod.yml up -d --build
-	$(D_MANAGE) makemigrations
+	# OPT error
+	# $(D_MANAGE) makemigrations
 	$(D_MANAGE) migrate --noinput
 	$(D_MANAGE) createsuperuser --noinput
 	$(D_MANAGE) collectstatic --noinput
@@ -133,7 +134,7 @@ docker_push:
 	docker tag postgres:12.0-alpine eu.gcr.io/victor-ciurana-com/postgres
 
 	docker-compose -f docker-compose.prod.yml build
-	docker-compose -f docker-compose.prod.yml up -d --build
+	docker-compose -f docker-compose.prod.yml up --force-recreate --remove-orphans -d --build
 
 	docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy
 	docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx
