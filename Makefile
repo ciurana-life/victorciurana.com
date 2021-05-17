@@ -133,27 +133,27 @@ d_prod_remove:
 
 docker_push:
 	docker-compose -f docker-compose.prod.yml build
-	# docker tag victorciuranacom_nginx-proxy eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy
-	# docker tag victorciuranacom_nginx eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx
+	docker tag victorciuranacom_nginx-proxy eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy
+	docker tag victorciuranacom_nginx eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx
 	docker tag victorciuranacom_web eu.gcr.io/victor-ciurana-com/victorciuranacom_web
-	# docker tag jrcs/letsencrypt-nginx-proxy-companion eu.gcr.io/victor-ciurana-com/jrcs/letsencrypt-nginx-proxy-companion
-	# docker tag redis:alpine eu.gcr.io/victor-ciurana-com/redis-v
-	# docker tag postgres:12.0-alpine eu.gcr.io/victor-ciurana-com/postgres
+	docker tag jrcs/letsencrypt-nginx-proxy-companion eu.gcr.io/victor-ciurana-com/jrcs/letsencrypt-nginx-proxy-companion
+	docker tag redis:alpine eu.gcr.io/victor-ciurana-com/redis-v
+	docker tag postgres:12.0-alpine eu.gcr.io/victor-ciurana-com/postgres
 
-	# docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy
-	# docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx
+	docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy
+	docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx
 	docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_web
-	# docker push eu.gcr.io/victor-ciurana-com/jrcs/letsencrypt-nginx-proxy-companion
-	# docker push eu.gcr.io/victor-ciurana-com/redis-v
-	# docker push eu.gcr.io/victor-ciurana-com/postgres
+	docker push eu.gcr.io/victor-ciurana-com/jrcs/letsencrypt-nginx-proxy-companion
+	docker push eu.gcr.io/victor-ciurana-com/redis-v
+	docker push eu.gcr.io/victor-ciurana-com/postgres
 
 docker_pull:
-	# docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy:latest
-	# docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx:latest
+	docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy:latest
+	docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx:latest
 	docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest
-	# docker pull eu.gcr.io/victor-ciurana-com/jrcs/letsencrypt-nginx-proxy-companion:latest
-	# docker pull eu.gcr.io/victor-ciurana-com/redis-v:latest
-	# docker pull eu.gcr.io/victor-ciurana-com/postgres:latest
+	docker pull eu.gcr.io/victor-ciurana-com/jrcs/letsencrypt-nginx-proxy-companion:latest
+	docker pull eu.gcr.io/victor-ciurana-com/redis-v:latest
+	docker pull eu.gcr.io/victor-ciurana-com/postgres:latest
 
 	docker-compose -f docker-compose.prod.yml up --force-recreate --remove-orphans -d
 	docker-compose exec web python manage.py migrate --no-input
