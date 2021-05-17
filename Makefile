@@ -109,12 +109,7 @@ d_prod_install:
 	@echo "${GREEN}[#] STARTING RPOD DOCKER INSTALL${RESET}"
 	docker pull nginx:1.19.0-alpine
 	chmod +x entrypoint.prod.sh
-	docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy:latest
-	docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx:latest
-	docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest
-	docker pull eu.gcr.io/victor-ciurana-com/jrcs/letsencrypt-nginx-proxy-companion:latest
-	docker pull eu.gcr.io/victor-ciurana-com/redis-v:latest
-	docker pull eu.gcr.io/victor-ciurana-com/postgres:latest
+	docker-compose -f docker-compose.prod.yml pull
 	docker-compose -f docker-compose.prod.yml up -d --build
 	$(D_MANAGE) makemigrations
 	$(D_MANAGE) migrate --noinput
@@ -131,29 +126,38 @@ d_prod_remove:
 	docker-compose -f docker-compose.prod.yml down -v
 	@echo "${RED}[#] The prod Docker project was removed${RESET}"
 
-docker_push:
-	docker-compose -f docker-compose.prod.yml build
+docker_tag:
 	docker tag victorciuranacom_nginx-proxy eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy
 	docker tag victorciuranacom_nginx eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx
 	docker tag victorciuranacom_web eu.gcr.io/victor-ciurana-com/victorciuranacom_web
-	docker tag jrcs/letsencrypt-nginx-proxy-companion eu.gcr.io/victor-ciurana-com/jrcs/letsencrypt-nginx-proxy-companion
-	docker tag redis:alpine eu.gcr.io/victor-ciurana-com/redis-v
+	# docker tag jrcs/letsencrypt-nginx-proxy-companion eu.gcr.io/victor-ciurana-com/jrcs/letsencrypt-nginx-proxy-companion
+	# docker tag redis:alpine eu.gcr.io/victor-ciurana-com/redis
 	docker tag postgres:12.0-alpine eu.gcr.io/victor-ciurana-com/postgres
+
+docker_push:
+	docker-compose -f docker-compose.prod.yml build
+	docker-compose -f docker-compose.prod.yml up -d --build
 
 	docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy
 	docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx
 	docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_web
-	docker push eu.gcr.io/victor-ciurana-com/jrcs/letsencrypt-nginx-proxy-companion
-	docker push eu.gcr.io/victor-ciurana-com/redis-v
+	# docker push eu.gcr.io/victor-ciurana-com/jrcs/letsencrypt-nginx-proxy-companion
+	# docker push eu.gcr.io/victor-ciurana-com/redis
 	docker push eu.gcr.io/victor-ciurana-com/postgres
+	# docker-compose -f docker-compose.prod.yml push -- Not working as intended
+	# not pushing anything to GCP Container Registry
+	# TMP - not calling docker-compose -f docker-compose.prod.yml up -d --build
+	# wont generate redis or nginx companion, works as intended?
+	# test without them and see if production builds ok that
 
 docker_pull:
-	docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy:latest
-	docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx:latest
-	docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest
-	docker pull eu.gcr.io/victor-ciurana-com/jrcs/letsencrypt-nginx-proxy-companion:latest
-	docker pull eu.gcr.io/victor-ciurana-com/redis-v:latest
-	docker pull eu.gcr.io/victor-ciurana-com/postgres:latest
+	# docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy:latest
+	# docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx:latest
+	# docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest
+	# docker pull eu.gcr.io/victor-ciurana-com/jrcs/letsencrypt-nginx-proxy-companion:latest
+	# docker pull eu.gcr.io/victor-ciurana-com/redis-v:latest
+	# docker pull eu.gcr.io/victor-ciurana-com/postgres:latest
+	docker-compose -f docker-compose.prod.yml pull
 
 	docker-compose -f docker-compose.prod.yml up --force-recreate --remove-orphans -d
 	docker-compose exec web python manage.py migrate --no-input
