@@ -1,5 +1,5 @@
-# Pull base image
-FROM python:3.8-alpine
+# Pull base image (compiled on M1 arm64 --> x86_64 [uname -m])
+FROM --platform=linux/x86-64 python:3.8-alpine
 
 # Create directory for the app user
 RUN mkdir -p /home/app

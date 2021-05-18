@@ -108,6 +108,7 @@ d_prod_install_all:
 d_prod_install:
 	@echo "${GREEN}[#] STARTING RPOD DOCKER INSTALL${RESET}"
 	docker pull nginx:1.19.0-alpine
+	export CLOUDSDK_PYTHON=/usr/bin/python3
 	chmod +x entrypoint.prod.sh
 	docker-compose -f docker-compose.prod.yml pull
 	docker-compose -f docker-compose.prod.yml up -d
@@ -132,6 +133,7 @@ docker_push:
 	docker-compose -f docker-compose.prod.yml push
 
 docker_pull:
+	export CLOUDSDK_PYTHON=/usr/bin/python3
 	docker-compose -f docker-compose.prod.yml pull
 	docker system prune -af
 
