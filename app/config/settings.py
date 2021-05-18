@@ -46,6 +46,16 @@ if DEBUG:
 
 MARTOR_THEME = "bootstrap"
 
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": env.str("REDIS_LOCATION"),
+        "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
+        "KEY_PREFIX": "example",
+    }
+}
+
+
 # To show the toolbar buttons
 MARTOR_TOOLBAR_BUTTONS = [
     "bold",

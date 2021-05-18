@@ -61,15 +61,16 @@ poetry run ./manage.py YOUR_COMMAND
 ```
 
 
-## Server install (GCP) ##
+## Server install (GCP: debian buster) ##
+
+Install make (or google how to on your OS), and git:
+```
+sudo apt-get install build-essential git -y
+```
+
 Clone repo:
 ```
 git clone https://github.com/ciurana-life/victorciurana.com.git
-```
-
-Install make (or google how to on your OS):
-```
-sudo apt-get install build-essential
 ```
 
 Run (with ```sudo su```):

@@ -95,8 +95,6 @@ d_prod_install_all:
 	gcloud auth application-default login
 	gcloud auth configure-docker
 	gcloud auth list
-	# bug fix
-	sed -i -e 's/gcloud/gcr/g' ~/.docker/config.json
 	@echo "${GREEN}[# 3] If you see yourself on the ACTIVE ACCOUNT your are done :) ${RESET}"
 
 	@echo "${GREEN} [# 4] Installing sops ... ${RESET}"
@@ -112,8 +110,10 @@ d_prod_install:
 	docker pull nginx:1.19.0-alpine
 	export CLOUDSDK_PYTHON=python3
 	chmod +x entrypoint.prod.sh
-	docker-compose -f docker-compose.prod.yml pull
-	docker-compose -f docker-compose.prod.yml up -d
+	docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest
+	docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy:latest
+	# docker-compose -f docker-compose.prod.yml pull
+	docker-compose -f docker-compose.prod.yml up -d --force-recreate --remove-orphans
 	# OPT error
 	# $(D_MANAGE) makemigrations
 	$(D_MANAGE) migrate --noinput
@@ -136,7 +136,10 @@ docker_push:
 
 docker_pull:
 	export CLOUDSDK_PYTHON=python3
-	docker-compose -f docker-compose.prod.yml pull
+	docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest
+	docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy:latest
+	# docker-compose -f docker-compose.prod.yml pull
+	docker-compose -f docker-compose.prod.yml up -d --force-recreate --remove-orphans
 	docker system prune -af
 
 	docker ps

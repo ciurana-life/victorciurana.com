@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.urls import reverse
@@ -23,6 +24,7 @@ class BlogPost(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
+        cache.clear()
         return super().save(*args, **kwargs)
 
 
