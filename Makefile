@@ -134,12 +134,16 @@ docker_push:
 	docker tag victorciuranacom_nginx eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx
 	docker tag victorciuranacom_web eu.gcr.io/victor-ciurana-com/victorciuranacom_web
 	docker tag postgres:12.0-alpine eu.gcr.io/victor-ciurana-com/postgres
+	docker tag jrcs/letsencrypt-nginx-proxy-companion eu.gcr.io/victor-ciurana-com/jrcs/letsencrypt-nginx-proxy-companion
+	docker tag redis:alpine eu.gcr.io/victor-ciurana-com/redis
 
 
 	docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy
 	docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx
 	docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_web
 	docker push eu.gcr.io/victor-ciurana-com/postgres
+	docker push eu.gcr.io/victor-ciurana-com/jrcs/letsencrypt-nginx-proxy-companion
+	docker push eu.gcr.io/victor-ciurana-com/redis
 
 	# docker-compose -f docker-compose.prod.yml push -- Not working as intended
 	# not pushing anything to GCP Container Registry
