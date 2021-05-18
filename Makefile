@@ -110,7 +110,7 @@ d_prod_install:
 	docker pull nginx:1.19.0-alpine
 	chmod +x entrypoint.prod.sh
 	docker-compose -f docker-compose.prod.yml pull
-	docker-compose -f docker-compose.prod.yml up -d --build
+	docker-compose -f docker-compose.prod.yml up -d
 	# OPT error
 	# $(D_MANAGE) makemigrations
 	$(D_MANAGE) migrate --noinput
@@ -120,7 +120,7 @@ d_prod_install:
 	@echo "${GREEN}[#] An admin user was created:${RESET}"
 	@echo "${GREEN}[#]     user: asuka${RESET}"
 	@echo "${GREEN}[#]     password: eva02${RESET}"
-	@echo "${GREEN}[#] You can now go to https://victorciurana.com${RESET}"
+	@echo "${GREEN}[#] You can now go to http://victorciurana.com${RESET}"
 
 d_prod_remove:
 	@echo "${RED}[#] REMOVING PROD DOCKER INSTALL${RESET}"
@@ -129,29 +129,11 @@ d_prod_remove:
 
 docker_push:
 	docker-compose -f docker-compose.prod.yml build
-
-	docker tag victorciuranacom_nginx-proxy eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy
-	docker tag victorciuranacom_nginx eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx
-	docker tag victorciuranacom_web eu.gcr.io/victor-ciurana-com/victorciuranacom_web
-	docker tag postgres:12.0-alpine eu.gcr.io/victor-ciurana-com/postgres
-	docker tag jrcs/letsencrypt-nginx-proxy-companion eu.gcr.io/victor-ciurana-com/jrcs/letsencrypt-nginx-proxy-companion
-	docker tag redis:alpine eu.gcr.io/victor-ciurana-com/redis
-
-
-	docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy
-	docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx
-	docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_web
-	docker push eu.gcr.io/victor-ciurana-com/postgres
-	docker push eu.gcr.io/victor-ciurana-com/jrcs/letsencrypt-nginx-proxy-companion
-	docker push eu.gcr.io/victor-ciurana-com/redis
-
-	# docker-compose -f docker-compose.prod.yml push -- Not working as intended
-	# not pushing anything to GCP Container Registry
+	docker-compose -f docker-compose.prod.yml push
 
 docker_pull:
-	docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web
-	docker-compose -f docker-compose.prod.yml up -d --build
-	docker-compose exec web python manage.py migrate --no-input
+	docker-compose -f docker-compose.prod.yml pull
+	docker system prune -af
 
 	docker ps
 
