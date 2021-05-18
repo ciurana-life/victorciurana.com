@@ -95,6 +95,8 @@ d_prod_install_all:
 	gcloud auth application-default login
 	gcloud auth configure-docker
 	gcloud auth list
+	# bug fix
+	sed -i -e 's/gcloud/gcr/g' ~/.docker/config.json
 	@echo "${GREEN}[# 3] If you see yourself on the ACTIVE ACCOUNT your are done :) ${RESET}"
 
 	@echo "${GREEN} [# 4] Installing sops ... ${RESET}"
@@ -108,7 +110,7 @@ d_prod_install_all:
 d_prod_install:
 	@echo "${GREEN}[#] STARTING RPOD DOCKER INSTALL${RESET}"
 	docker pull nginx:1.19.0-alpine
-	export CLOUDSDK_PYTHON=/usr/bin/python3
+	export CLOUDSDK_PYTHON=python3
 	chmod +x entrypoint.prod.sh
 	docker-compose -f docker-compose.prod.yml pull
 	docker-compose -f docker-compose.prod.yml up -d
@@ -133,7 +135,7 @@ docker_push:
 	docker-compose -f docker-compose.prod.yml push
 
 docker_pull:
-	export CLOUDSDK_PYTHON=/usr/bin/python3
+	export CLOUDSDK_PYTHON=python3
 	docker-compose -f docker-compose.prod.yml pull
 	docker system prune -af
 
