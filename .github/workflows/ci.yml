@@ -18,7 +18,7 @@ jobs:
         id: install
 
       - name: Login
-        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        uses: google-github-actions/setup-gcloud@master
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           service_account_email: ${{ secrets.GCP_EMAIL }}
@@ -30,13 +30,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # - name: Build Docker image
-      #   run: docker build . -t $IMAGE_NAME
-
-      - name: Pull dev image from registry
-        # run: docker-compose pull
-        # Fuck google?
+      - name: Pull dev image from registry (Google required)
         run: docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev:latest
+
+      - name: Build dev image from registry (Google required)
+        run: docker build . -t eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev:latest
 
       - name: Build Docker image with compose
         run: docker-compose build
@@ -47,6 +45,9 @@ jobs:
       - name: Pytest
         run: docker-compose run web pytest
 
-      - name: Push dev image
+      - name: Push dev image (test, I guess wont work)
         run: docker-compose push
+
+      # - name: Build Docker image
+      #   run: docker build . -t $IMAGE_NAME
 
