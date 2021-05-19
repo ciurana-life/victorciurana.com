@@ -47,6 +47,8 @@ jobs:
       - name: Push dev image
         run: docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
 
+      # If all works push te production one
+
       # - name: Build Docker image
       #   run: docker build . -t $IMAGE_NAME
 
