@@ -31,10 +31,10 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Pull dev image from registry (Google required)
-        run: docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev:latest
+        run: docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
 
       - name: Build dev image from registry (Google required)
-        run: docker build . -t eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev:latest
+        run: docker build . -t eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
 
       - name: Build Docker image with compose
         run: docker-compose build
@@ -45,8 +45,8 @@ jobs:
       - name: Pytest
         run: docker-compose run web pytest
 
-      - name: Push dev image (test, I guess wont work)
-        run: docker-compose push
+      - name: Push dev image
+        run: docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
 
       # - name: Build Docker image
       #   run: docker build . -t $IMAGE_NAME
