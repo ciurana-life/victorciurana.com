@@ -13,6 +13,23 @@ jobs:
 
     steps:
 
+      # Check out code
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Set up buildx runner
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      # Cache the builds
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
       - name: Sops Binary Installer
         uses: mdgreenwald/mozilla-sops-action@v1
         id: install
@@ -27,15 +44,17 @@ jobs:
       - name: Configure Docker
         run: gcloud auth configure-docker --quiet
 
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
       - name: Pull build dev image from registry (Google required)
-        run: |
-          docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
-          docker build . -t eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
+        run: docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
+
+      - name: Build (attept cache)
+        run: docker build . -t eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
 
       - name: Build Docker image with compose
+        with:
+          context: .
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new
         run: docker-compose build
 
       - name: Lint checks with black and flake8
@@ -46,6 +65,11 @@ jobs:
 
       - name: Push dev image
         run: docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
+
+      - name: Move cache (prevent 5GB GitHub cache limit)
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
       # If all works push te production one
 
