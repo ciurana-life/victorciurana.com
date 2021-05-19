@@ -10,8 +10,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Needs access to code
+      - uses: actions/checkout@v1
+
       - name: Test build part
         run: echo "Test build part runs"
 
       - name: Test secrets work
-        run : echo "My secret ${{ secrets.NOT_SO_SECRET }}"
+        run: echo "My secret ${{ secrets.NOT_SO_SECRET }}"
+
+      - name: Test docker compose
+        run: docker-compose build
