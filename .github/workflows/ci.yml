@@ -2,51 +2,16 @@ name: CI
 
 on: [push]
 
-stages:
-  - build
-  - test
-  - deploy
+jobs:
 
-build:
-  stage: build
-  script:
-    - echo "Test build part runs"
+  build:
 
-test:
-  stage: test
-  script:
-    - echo "Test test part runs"
+    name: Test job
+    runs-on: ubuntu-latest
 
-deploy:
-  stage: deploy
-  name: Do I have a name?
-  runs-on: ubuntu-latest
-  steps:
-    - name: First step deploy
-      run: ehoc "first deploy"
-    - name: Step name secret echo
-      run: |
-        echo "My secret ${{ secrets.NOT_SO_SECRET }}"
+    steps:
+      - name: Test build part
+        run: echo "Test build part runs"
 
-# jobs:
-#   build:
-
-#     runs-on: ubuntu-latest
-#     strategy:
-#       matrix:
-#         python-version: [3.8, 3.9]
-
-#     steps:
-#       - uses: actions/checkout@v2
-#       - name: Set up Python ${{ matrix.python-version }}
-#         uses: actions/setup-python@v2
-#         with:
-#           python-version: ${{ matrix.python-version }}
-#       - name: Install dependencies (poetry)
-#         run: |
-#           python -m pip install --upgrade pip
-#           pip install poetry
-#           poetry install
-#       - name: Run tests, flake8 & black
-#         run: |
-#           poetry run pytest --black app --flake8
+      - name: Test secrets work
+        run : echo "My secret ${{ secrets.NOT_SO_SECRET }}"
