@@ -11,6 +11,10 @@ services:
     env_file:
       - .envs/.local/.env.dev
 
+    depends_on:
+      - db
+      - redis
+
   db:
     image: postgres:12.0-alpine
     volumes:

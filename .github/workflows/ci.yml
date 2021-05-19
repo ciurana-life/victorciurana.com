@@ -33,14 +33,12 @@ jobs:
       # - name: Build Docker image
       #   run: docker build . -t $IMAGE_NAME
 
-      - name: Do I have kms ?
-        run: |
-          gcloud auth application-default login
-          gcloud kms keys list --location global --keyring victorciurana-keyring
+      - name: Build Docker image with compose
+        run: docker-compose build
 
-      # - name: Build Docker image with compose
-      #   run: docker-compose build
+      - name: Lint checks with black and flake8
+        run: docker-compose run web pytest --black app --flake8
 
-      # - name: Pytest (breaks)
-      #   run: docker-compose exec -T web pytest
+      - name: Pytest
+        run: docker-compose run web pytest
 
