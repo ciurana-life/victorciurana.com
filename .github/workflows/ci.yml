@@ -33,6 +33,9 @@ jobs:
       # - name: Build Docker image
       #   run: docker build . -t $IMAGE_NAME
 
+      - name: Pull dev image from registry
+        run: docker-compose pull
+
       - name: Build Docker image with compose
         run: docker-compose build
 
@@ -41,4 +44,7 @@ jobs:
 
       - name: Pytest
         run: docker-compose run web pytest
+
+      - name: Push dev image
+        run: docker-compose push
 
