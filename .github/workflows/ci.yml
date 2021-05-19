@@ -34,7 +34,9 @@ jobs:
       #   run: docker build . -t $IMAGE_NAME
 
       - name: Do I have kms ?
-        run: gcloud kms keys list --location global --keyring victorciurana-keyring
+        run: |
+          gcloud auth application-default login
+          gcloud kms keys list --location global --keyring victorciurana-keyring
 
       # - name: Build Docker image with compose
       #   run: docker-compose build
