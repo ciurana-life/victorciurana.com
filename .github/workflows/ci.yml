@@ -37,5 +37,5 @@ jobs:
         run: docker-compose build
 
       - name: Pytest Black flake
-        run: docker-compose exec web pytest
+        run: docker-compose exec -T web pytest
 
