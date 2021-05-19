@@ -11,7 +11,8 @@ jobs:
 
     steps:
       # Needs access to code
-      - uses: actions/checkout@v1
+      - name: Checkout repository
+        uses: actions/checkout@v1
 
       - name: Test build part
         run: echo "Test build part runs"
@@ -19,5 +20,5 @@ jobs:
       - name: Test secrets work
         run: echo "My secret ${{ secrets.NOT_SO_SECRET }}"
 
-      - name: Test docker compose
+      - name: Test docker compose (Do I build faster?)
         run: docker-compose build
