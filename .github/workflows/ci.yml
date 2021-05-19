@@ -31,3 +31,12 @@ jobs:
 
       - name: Build Docker image with compose
         run: docker-compose build
+
+      - name: Pytest Black flake
+        run: docker-compose exec web pytest --cache-clear --black app --flake8
+
+      - name: Sops Binary Installer
+        uses: mdgreenwald/mozilla-sops-action@v1
+        # with:
+        #   version: '<version>' # default is latest stable
+        id: install
