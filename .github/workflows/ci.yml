@@ -30,11 +30,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Pull dev image from registry (Google required)
-        run: docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
-
-      - name: Build dev image from registry (Google required)
-        run: docker build . -t eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
+      - name: Pull build dev image from registry (Google required)
+        run: |
+          docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
+          docker build . -t eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
 
       - name: Build Docker image with compose
         run: docker-compose build
