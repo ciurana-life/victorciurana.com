@@ -8,17 +8,23 @@ jobs:
 
     name: Test job
     runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: eu.gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}
 
     steps:
-      # Needs access to code
+
+      - name: Login
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_email: ${{ secrets.GCP_EMAIL }}
+          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+
+      - name: Configure Docker
+        run: gcloud auth configure-docker --quiet
+
       - name: Checkout repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
-      - name: Test build part
-        run: echo "Test build part runs"
-
-      - name: Test secrets work
-        run: echo "My secret ${{ secrets.NOT_SO_SECRET }}"
-
-      - name: Test docker compose (Do I build faster?)
-        run: docker-compose build
+      - name: Build Docker image
+        run: docker build . -t $IMAGE_NAME
