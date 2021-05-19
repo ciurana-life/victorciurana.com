@@ -22,7 +22,7 @@ def test_home_page_returns_correct_html():
     html = response.rendered_content
     assert html.startswith("<!DOCTYPE html>") == True
     assert "<title>Victor Ciurana</title>" in html
-    assert html.endswith("</html>") == True
+    assert "</html>" in html[-10::]
     assert response.status_code == 200
 
 
@@ -59,10 +59,10 @@ def test_blog_post_list_view_response_with_post(blog_post):
 @pytest.mark.django_db
 def test_blog_post_detail_view_returns_correct_html(blog_post):
     request = RequestFactory().get(blog_post.get_absolute_url)
-    response = BlogPostDetailView.as_view()(request, pk=1)
+    response = BlogPostDetailView.as_view()(request, pk=blog_post.pk)
     html = response.rendered_content
     assert html.startswith("<!DOCTYPE html>") == True
     assert "<title>test post</title>" in html
     assert '<div class="article_content">' in html
-    assert html.endswith("</html>") == True
+    assert "</html>" in html[-10::]
     assert response.status_code == 200
