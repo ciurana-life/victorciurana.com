@@ -34,7 +34,9 @@ jobs:
       #   run: docker build . -t $IMAGE_NAME
 
       - name: Pull dev image from registry
-        run: docker-compose pull
+        # run: docker-compose pull
+        # Fuck google?
+        run: docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev:latest
 
       - name: Build Docker image with compose
         run: docker-compose build
