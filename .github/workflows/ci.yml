@@ -51,10 +51,6 @@ jobs:
         run: docker build . -t eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
 
       - name: Build Docker image with compose
-        with:
-          context: .
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache-new
         run: docker-compose build
 
       - name: Lint checks with black and flake8
