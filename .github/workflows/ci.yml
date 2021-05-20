@@ -41,11 +41,13 @@ jobs:
       - name: Configure Docker
         run: gcloud auth configure-docker --quiet
 
-      # For now useless we can't cache
-      # - name: Pull GCR dev
-      #   run: docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
-      # - name: Build Docker image with compose
-      #   run: docker-compose build
+      # Build for tests
+      - name: Pull GCR dev
+        run: docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
+      - name: Build GCR dev
+        run: docker build . -t eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
+      - name: Build Docker image with compose
+        run: docker-compose build
 
       # Run liters and tests
       - name: Lint checks with black and flake8
@@ -53,9 +55,7 @@ jobs:
       - name: Pytest
         run: docker-compose run web pytest
 
-      # If tests pass build dev and push
-      - name: Build GCR dev
-        run: docker build . -t eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
+      # If tests pass push dev
       - name: Push dev image
         run: docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
 
