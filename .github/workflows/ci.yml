@@ -62,10 +62,6 @@ jobs:
       - name: Push dev image
         run: docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
 
-      - name: Move cache (prevent 5GB GitHub cache limit)
-        run: |
-          rm -rf /tmp/.buildx-cache
-          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
       # If all works push te production one
 
