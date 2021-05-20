@@ -67,12 +67,12 @@ jobs:
           sops exec-env .envs/.prod/.env.prod 'docker -H "ssh://admin@${{ secrets.SSH_HOSTS }}" images'
 
       - name: Does soaps runs as expected?
-        run: sops exec-env .envs/.prod/.env.pgp.prod 'docker-compose -H "ssh://admin@${{ secrets.SSH_HOSTS }}" -f docker-compose.prod.yml images'
+        run: sops exec-env .envs/.prod/.env.prod 'docker-compose -H "ssh://admin@${{ secrets.SSH_HOSTS }}" -f docker-compose.prod.yml images'
 
       # - name: Build prod Docker image
         # run: |
-        #   sops exec-env .envs/.prod/.env.pgp.prod 'docker build . -t eu.gcr.io/victor-ciurana-com/victorciuranacom_web'
+        #   sops exec-env .envs/.prod/.env.prod 'docker build . -t eu.gcr.io/victor-ciurana-com/victorciuranacom_web'
         #   docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_web
         #   docker -H "ssh://admin@${{ secrets.SSH_HOSTS }}" pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web
-        #   sops exec-env .envs/.prod/.env.pgp.prod 'docker-compose -H "ssh://admin@${{ secrets.SSH_HOSTS }}" -f docker-compose.prod.yml up --force-recreate --remove-orphans -d'
+        #   sops exec-env .envs/.prod/.env.prod 'docker-compose -H "ssh://admin@${{ secrets.SSH_HOSTS }}" -f docker-compose.prod.yml up --force-recreate --remove-orphans -d'
         #   docker -H "ssh://admin@${{ secrets.SSH_HOSTS }}" image prune -af
