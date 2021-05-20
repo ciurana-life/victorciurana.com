@@ -60,6 +60,10 @@ jobs:
         run: ssh-keyscan -H ${{ secrets.SSH_HOSTS }} >> ~/.ssh/known_hosts
       - name: Test shh connection
         run: docker -H "ssh://admin@${{ secrets.SSH_HOSTS }}" images
+
+
+      - name: Does soaps runs as expected?
+        run: sops exec-env .envs/.prod/.env.prod 'docker-compose -H "ssh://admin@${{ secrets.SSH_HOSTS }}" -f docker-compose.prod.yml up --force-recreate --remove-orphans -d'
       # - name: Build Docker image
       #   run: docker build . -t $IMAGE_NAME
 
