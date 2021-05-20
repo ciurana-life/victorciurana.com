@@ -26,6 +26,7 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           service_account_email: ${{ secrets.GCP_EMAIL }}
           service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+          export_default_credentials: true
 
       - name: Configure Docker
         run: gcloud auth configure-docker --quiet
@@ -61,13 +62,9 @@ jobs:
       - name: Test shh connection
         run: docker -H "ssh://admin@${{ secrets.SSH_HOSTS }}" images
 
-      - name: Configure GPG Key
+      - name: Test google kms
         run: |
-          echo -n "$GPG_SIGNING_KEY" | gpg --allow-secret-key-import --import
-          gpg --list-keys
-          sops exec-env .envs/.prod/.env.pgp.prod 'docker -H "ssh://admin@${{ secrets.SSH_HOSTS }}" images'
-        env:
-          GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
+          sops exec-env .envs/.prod/.env.prod 'docker -H "ssh://admin@${{ secrets.SSH_HOSTS }}" images'
 
       # - name: Does soaps runs as expected?
       #   run: sops exec-env .envs/.prod/.env.pgp.prod 'docker-compose -H "ssh://admin@${{ secrets.SSH_HOSTS }}" -f docker-compose.prod.yml images'
