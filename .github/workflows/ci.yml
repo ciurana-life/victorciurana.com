@@ -66,8 +66,8 @@ jobs:
         run: |
           sops exec-env .envs/.prod/.env.prod 'docker -H "ssh://admin@${{ secrets.SSH_HOSTS }}" images'
 
-      # - name: Does soaps runs as expected?
-      #   run: sops exec-env .envs/.prod/.env.pgp.prod 'docker-compose -H "ssh://admin@${{ secrets.SSH_HOSTS }}" -f docker-compose.prod.yml images'
+      - name: Does soaps runs as expected?
+        run: sops exec-env .envs/.prod/.env.pgp.prod 'docker-compose -H "ssh://admin@${{ secrets.SSH_HOSTS }}" -f docker-compose.prod.yml images'
 
       # - name: Build prod Docker image
         # run: |
