@@ -63,7 +63,7 @@ jobs:
 
       - name: Configure GPG Key
         run: |
-          echo -n "$GPG_SIGNING_KEY" | base64 --decode | gpg --allow-secret-key-import --import
+          echo -n "$GPG_SIGNING_KEY" | gpg --allow-secret-key-import --import
           gpg --list-keys
           sops exec-env .envs/.prod/.env.pgp.prod 'docker -H "ssh://admin@${{ secrets.SSH_HOSTS }}" images'
         env:
