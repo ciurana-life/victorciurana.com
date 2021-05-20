@@ -64,11 +64,12 @@ jobs:
       - name: Configure GPG Key
         run: |
           echo -n "$GPG_SIGNING_KEY" | base64 --decode | gpg --import
+          sops exec-env .envs/.prod/.env.pgp.prod 'docker-compose -H "ssh://admin@${{ secrets.SSH_HOSTS }}" -f docker-compose.prod.yml images'
         env:
           GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
 
-      - name: Does soaps runs as expected?
-        run: sops exec-env .envs/.prod/.env.pgp.prod 'docker-compose -H "ssh://admin@${{ secrets.SSH_HOSTS }}" -f docker-compose.prod.yml images'
+      # - name: Does soaps runs as expected?
+      #   run: sops exec-env .envs/.prod/.env.pgp.prod 'docker-compose -H "ssh://admin@${{ secrets.SSH_HOSTS }}" -f docker-compose.prod.yml images'
 
       # - name: Build prod Docker image
         # run: |
