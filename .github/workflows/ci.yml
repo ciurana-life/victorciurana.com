@@ -76,7 +76,7 @@ jobs:
 
       # Up --recreate
       - name: Up prod on VM
-        run: LD_LIBRARY_PATH=/usr/lib sops exec-env .envs/.prod/.prod.env 'docker-compose -H "ssh://admin@${{ secrets.SSH_HOSTS }}" -f docker-compose.prod.yml up --force-recreate --remove-orphans -d'
+        run: LD_LIBRARY_PATH=/usr/lib sops exec-env .envs/.prod/.prod.env 'docker -H "ssh://admin@${{ secrets.SSH_HOSTS }}" compose -f docker-compose.prod.yml up --force-recreate --remove-orphans -d'
 
       - name: Remove unused prod VM
         run: docker -H "ssh://admin@${{ secrets.SSH_HOSTS }}" image prune -af
