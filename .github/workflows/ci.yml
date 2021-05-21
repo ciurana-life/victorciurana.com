@@ -42,41 +42,33 @@ jobs:
       - name: Configure Docker
         run: gcloud auth configure-docker --quiet
 
-      # # Build for tests
-      # - name: Pull GCR dev
-      #   run: docker-compose pull web || true
-      # - name: Build Docker image with compose
-      #   run: docker-compose build
+      # Build for tests
+      - name: Pull GCR dev
+        run: docker-compose pull web || true
+      - name: Build Docker image with compose
+        run: docker-compose build
 
-      # # Run liters and tests
-      # - name: Lint checks with black and flake8
-      #   run: docker-compose run web pytest --black app --flake8
-      # - name: Pytest
-      #   run: docker-compose run web pytest
+      # Run liters and tests
+      - name: Lint checks with black and flake8
+        run: docker-compose run web pytest --black app --flake8
+      - name: Pytest
+        run: docker-compose run web pytest
 
-      # # If tests pass push dev
-      # - name: Push dev image
-      #   run: docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
-
-      # OLD FOR REFERENCE, it hangs the VM
-      # run: |
-      #   sops exec-env .envs/.prod/.prod.env 'docker build . -t eu.gcr.io/victor-ciurana-com/victorciuranacom_web'
-      #   docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_web
-      #   docker -H "ssh://admin@${{ secrets.SSH_HOSTS }}" pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web
-      #   sops exec-env .envs/.prod/.prod.env 'docker-compose -H "ssh://admin@${{ secrets.SSH_HOSTS }}" -f docker-compose.prod.yml up --force-recreate --remove-orphans -d'
-      #   docker -H "ssh://admin@${{ secrets.SSH_HOSTS }}" image prune -af
+      # If tests pass push dev
+      - name: Push dev image
+        run: docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
 
       # Cache?
       - name: Pull prod Docker image
         run: docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web
 
       # If test pass build prod
-      # - name: Build prod Docker image
-      #   run: sops exec-env .envs/.prod/.prod.env 'docker-compose -f docker-compose.prod.yml build web'
+      - name: Build prod Docker image
+        run: sops exec-env .envs/.prod/.prod.env 'docker-compose -f docker-compose.prod.yml build web'
 
       # Push prod
-      # - name: Push prod to registry
-      #   run: docker-compose -f docker-compose.prod.yml push web
+      - name: Push prod to registry
+        run: docker-compose -f docker-compose.prod.yml push web
 
       # Prod changes with SSH
       - name: Pull prod on VM
@@ -84,7 +76,7 @@ jobs:
 
       # Up --recreate
       - name: Up prod on VM
-        run: sops exec-env .envs/.prod/.prod.env 'docker-compose -H "ssh://admin@${{ secrets.SSH_HOSTS }}" -f docker-compose.prod.yml up --force-recreate --remove-orphans -d'
+        run: LD_LIBRARY_PATH=/usr/lib sops exec-env .envs/.prod/.prod.env 'docker-compose -H "ssh://admin@${{ secrets.SSH_HOSTS }}" -f docker-compose.prod.yml up --force-recreate --remove-orphans -d'
 
       - name: Remove unused prod VM
         run: docker -H "ssh://admin@${{ secrets.SSH_HOSTS }}" image prune -af
