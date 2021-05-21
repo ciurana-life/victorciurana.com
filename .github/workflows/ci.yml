@@ -33,6 +33,7 @@ jobs:
       - name: Login GCP credentials
         uses: google-github-actions/setup-gcloud@master
         with:
+          version: '298.0.0'
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           service_account_email: ${{ secrets.GCP_EMAIL }}
           service_account_key: ${{ secrets.GCP_CREDENTIALS }}
@@ -79,7 +80,7 @@ jobs:
 
       # Prod changes with SSH
       - name: Pull prod on VM
-        run: docker -H "ssh://admin@${{ secrets.SSH_HOSTS }}" pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web
+        run: docker-compose -H "ssh://admin@${{ secrets.SSH_HOSTS }}" -f docker-compose.prod.yml pull
 
       # Up --recreate
       - name: Up prod on VM
