@@ -57,7 +57,7 @@ jobs:
 
       # If tests pass push dev
       - name: Push dev image
-        run: docker compose push web
+        run: docker-compose push web
 
 
       # If test pass build prod and push
