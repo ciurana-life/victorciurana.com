@@ -44,7 +44,7 @@ jobs:
 
       # Build for tests
       - name: Pull GCR dev
-        run: LD_LIBRARY_PATH=/usr/lib docker-compose pull web || true
+        run: docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
       - name: Build dev docker for test on it
         run: docker build eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
 
