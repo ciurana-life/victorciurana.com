@@ -46,7 +46,7 @@ jobs:
       - name: Pull GCR dev
         run: LD_LIBRARY_PATH=/usr/lib docker-compose pull web || true
       - name: Build dev docker for test on it
-        run: docker buil eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
+        run: docker build eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
 
       # Run liters and tests
       - name: Lint checks with black and flake8
