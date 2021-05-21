@@ -68,7 +68,7 @@ jobs:
 
       # Push prod
       - name: Push prod to registry
-        run: docker-compose -f docker-compose.prod.yml push web
+        run: LD_LIBRARY_PATH=/usr/lib docker-compose -f docker-compose.prod.yml push web
 
       # Prod changes with SSH
       - name: Pull prod on VM
