@@ -6,10 +6,10 @@ services:
         build:
             context: ./
             dockerfile: Dockerfile.prod
-        cache_from:
-            eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest
+            cache_from:
+                eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest
         image:
-            eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest
+                eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest
         command: gunicorn app.config.wsgi:application --bind 0.0.0.0:8000
         volumes:
             - static_volume:/home/app/web/staticfiles

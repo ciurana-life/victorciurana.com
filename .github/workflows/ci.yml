@@ -29,7 +29,7 @@ jobs:
       - name: Adding Known Hosts
         run: ssh-keyscan -H ${{ secrets.SSH_HOSTS }} >> ~/.ssh/known_hosts
 
-      # Set up gcloud actions and log int
+      # Set up gcloud actions and log in
       - name: Login GCP credentials
         uses: google-github-actions/setup-gcloud@master
         with:
@@ -43,9 +43,9 @@ jobs:
 
       # Build for tests
       - name: Pull GCR dev
-        run: docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
-      - name: Build GCR dev
-        run: docker build . -t eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
+        run: docker-compose pull web || true
+      # - name: Build GCR dev
+      #   run: docker build . -t eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
       - name: Build Docker image with compose
         run: docker-compose build
 
@@ -57,14 +57,14 @@ jobs:
 
       # If tests pass push dev
       - name: Push dev image
-        run: docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
+        run: docker compose push web
 
 
       # If test pass build prod and push
       - name: Build prod Docker image
         run: |
-          sops exec-env .envs/.prod/.prod.env 'docker build . -t eu.gcr.io/victor-ciurana-com/victorciuranacom_web'
-          docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_web
-          docker -H "ssh://admin@${{ secrets.SSH_HOSTS }}" pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web
+          sops exec-env .envs/.prod/.prod.env 'docker-compose -f docker-compose.prod.yml build'
+          docker-compose push
+          docker-compose -H "ssh://admin@${{ secrets.SSH_HOSTS }}" pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web
           sops exec-env .envs/.prod/.prod.env 'docker-compose -H "ssh://admin@${{ secrets.SSH_HOSTS }}" -f docker-compose.prod.yml up --force-recreate --remove-orphans -d'
           docker -H "ssh://admin@${{ secrets.SSH_HOSTS }}" image prune -af
