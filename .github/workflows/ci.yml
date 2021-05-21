@@ -44,7 +44,7 @@ jobs:
 
       # Build for tests
       - name: Pull GCR dev
-        run: docker-compose pull web || true
+        run: LD_LIBRARY_PATH=/usr/lib docker-compose pull web || true
       - name: Build Docker image with compose
         run: docker-compose build
 
