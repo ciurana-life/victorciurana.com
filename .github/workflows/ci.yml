@@ -80,7 +80,7 @@ jobs:
 
       # Prod changes with SSH
       - name: Pull prod on VM
-        run: docker-compose -H "ssh://admin@${{ secrets.SSH_HOSTS }}" -f docker-compose.prod.yml pull
+        run: LD_LIBRARY_PATH=/usr/lib docker-compose -H "ssh://admin@${{ secrets.SSH_HOSTS }}" -f docker-compose.prod.yml pull
 
       # Up --recreate
       - name: Up prod on VM
