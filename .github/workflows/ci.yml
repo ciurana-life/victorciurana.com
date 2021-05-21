@@ -64,7 +64,7 @@ jobs:
 
       # If test pass build prod
       - name: Build prod Docker image
-        run: sops exec-env .envs/.prod/.prod.env 'docker-compose -f docker-compose.prod.yml build web'
+        run: LD_LIBRARY_PATH=/usr/lib sops exec-env .envs/.prod/.prod.env 'docker-compose -f docker-compose.prod.yml build web'
 
       # Push prod
       - name: Push prod to registry
