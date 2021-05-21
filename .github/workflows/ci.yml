@@ -67,7 +67,7 @@ jobs:
 
       # Cache?
       - name: Pull prod Docker image
-        run: docker-compose -f docker-compose.prod.yml pull web || true
+        run: docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web
 
       # If test pass build prod
       # - name: Build prod Docker image
@@ -79,7 +79,7 @@ jobs:
 
       # Prod changes with SSH
       - name: Pull prod on VM
-        run: docker-compose -H "ssh://admin@${{ secrets.SSH_HOSTS }}" -f docker-compose.prod.yml pull web
+        run: docker -H "ssh://admin@${{ secrets.SSH_HOSTS }}" pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web
 
       # Up --recreate
       - name: Up prod on VM
