@@ -78,8 +78,8 @@ jobs:
       # Prod changes with SSH
       - name: Pull prod on VM
         run: |
-          LD_LIBRARY_PATH=/usr/lib docker-compose \
-             -H "ssh://admin@${{ secrets.SSH_HOSTS }}" -f docker-compose.prod.yml pull
+          LD_LIBRARY_PATH=/usr/lib docker \
+             -H "ssh://admin@${{ secrets.SSH_HOSTS }}" pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest
 
       # Up --recreate (GUARRADA)
       - name: Up prod on VM
