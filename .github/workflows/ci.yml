@@ -46,7 +46,7 @@ jobs:
       - name: Pull GCR dev
         run: LD_LIBRARY_PATH=/usr/lib docker-compose pull web || true
       - name: Build Docker image with compose
-        run: docker-compose build
+        run: LD_LIBRARY_PATH=/usr/lib docker-compose build
 
       # Run liters and tests
       - name: Lint checks with black and flake8
