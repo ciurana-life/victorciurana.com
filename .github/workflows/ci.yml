@@ -70,16 +70,16 @@ jobs:
         run: docker-compose -f docker-compose.prod.yml pull web || true
 
       # If test pass build prod
-      - name: Build prod Docker image
-        run: sops exec-env .envs/.prod/.prod.env 'docker-compose -f docker-compose.prod.yml build web'
+      # - name: Build prod Docker image
+      #   run: sops exec-env .envs/.prod/.prod.env 'docker-compose -f docker-compose.prod.yml build web'
 
       # Push prod
-      - name: Push prod to registry
-        run: docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_web
+      # - name: Push prod to registry
+      #   run: docker-compose -f docker-compose.prod.yml push web
 
       # Prod changes with SSH
       - name: Pull prod on VM
-        run: docker-compose -H "ssh://admin@${{ secrets.SSH_HOSTS }}" pull web
+        run: docker-compose -H "ssh://admin@${{ secrets.SSH_HOSTS }}" -f docker-compose.prod.yml pull web
 
       # Up --recreate
       - name: Up prod on VM
