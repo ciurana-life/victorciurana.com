@@ -45,8 +45,8 @@ jobs:
       # Build for tests
       - name: Pull GCR dev
         run: docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
-      - name: Build dev docker for test on it
-        run: docker build eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
+      # - name: Build dev docker for test on it
+      #   run: docker build eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
 
       # Run liters and tests
       - name: Lint checks with black and flake8
