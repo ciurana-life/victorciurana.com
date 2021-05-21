@@ -45,8 +45,8 @@ jobs:
       # Build for tests
       - name: Pull GCR dev
         run: LD_LIBRARY_PATH=/usr/lib docker-compose pull web || true
-      - name: Build Docker image with compose
-        run: LD_LIBRARY_PATH=/usr/lib docker-compose build
+      - name: Build dev docker for test on it
+        run: docker buil eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
 
       # Run liters and tests
       - name: Lint checks with black and flake8
@@ -64,7 +64,7 @@ jobs:
 
       # If test pass build prod
       - name: Build prod Docker image
-        run: LD_LIBRARY_PATH=/usr/lib sops exec-env .envs/.prod/.prod.env 'docker-compose -f docker-compose.prod.yml build web'
+        run: sops exec-env .envs/.prod/.prod.env 'docker build eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev'
 
       # Push prod
       - name: Push prod to registry
@@ -76,7 +76,6 @@ jobs:
 
       # Up --recreate (GUARRADA)
       - name: Up prod on VM
-        # run: LD_LIBRARY_PATH=/usr/lib sops exec-env .envs/.prod/.prod.env 'docker-compose -H "ssh://admin@${{ secrets.SSH_HOSTS }}" -f docker-compose.prod.yml up --force-recreate --remove-orphans -d'
         run: |
           sops exec-env .envs/.prod/.prod.env 'ssh admin@${{ secrets.SSH_HOSTS }} "/home/admin/.local/bin/docker-compose -f victorciurana.com/docker-compose.prod.yml up --force-recreate --remove-orphans -d"'
 
