@@ -6,7 +6,7 @@ services:
     build:
         context: ./
         cache_from:
-            eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev:latest
+          - eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev:latest
     image:
             eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev:latest
     command: python manage.py runserver 0.0.0.0:8000
