@@ -34,8 +34,6 @@ services:
             - static_volume:/home/app/web/staticfiles
         ports:
             - 1337:80
-        env_file:
-            - .envs/.prod/.prod.dec.env
         depends_on:
             - web
 
@@ -76,4 +74,3 @@ volumes:
     certs:
     html:
     vhost:
-    acme:
