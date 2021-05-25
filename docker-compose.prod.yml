@@ -31,6 +31,7 @@ services:
     nginx-proxy:
         container_name: nginx-proxy
         build: ./deploytools/nginx
+        image: eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy:latest
         restart: always
         ports:
             - 443:443
