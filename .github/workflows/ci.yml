@@ -68,12 +68,12 @@ jobs:
       - name: Build prod Docker image
         run: |
           sops exec-env .envs/.prod/.prod.env 'docker build . -t \
-             eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev:latest \
+             eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest \
              --cache-from eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest'
 
       # Push prod
       - name: Push prod to registry
-        run: docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
+        run: docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_web
 
       # Prod changes with SSH
       - name: Pull prod on VM
