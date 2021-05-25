@@ -64,27 +64,27 @@ jobs:
       - name: Pull prod Docker image
         run: |
           docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest
-          docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy:latest
+        # docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy:latest
 
       # If test pass build prod
       - name: Build prod Docker image
         run: |
           docker build . -t eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest \
             --cache-from eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest
-          docker build . -t eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy:latest \
-            --cache-from eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy:latest
+        # docker build . -t eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy:latest \
+        #   --cache-from eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy:latest
 
       # Push prod
       - name: Push prod to registry
         run: |
           docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_web
-          docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy:latest
+        # docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy:latest
 
       # Prod changes with SSH
       - name: Pull prod on VM
         run: |
           docker -H "ssh://admin@${{ secrets.SSH_HOSTS }}" pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest
-          docker -H "ssh://admin@${{ secrets.SSH_HOSTS }}" pull eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy:latest
+        # docker -H "ssh://admin@${{ secrets.SSH_HOSTS }}" pull eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy:latest
 
       # Up --recreate (GUARRADA)
       - name: Up prod on VM
