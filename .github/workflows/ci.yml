@@ -85,8 +85,6 @@ jobs:
       - name: Up prod on VM
         run: |
           ssh admin@${{ secrets.SSH_HOSTS }} "cd victorciurana.com/; sops --decrypt .envs/.prod/.prod.env > .envs/.prod/.prod.dec.env"
-          # ssh admin@${{ secrets.SSH_HOSTS }} \
-          #   "/home/admin/.local/bin/docker-compose -f victorciurana.com/docker-compose.prod.yml up --force-recreate --remove-orphans -d"
           ssh admin@${{ secrets.SSH_HOSTS }} \
             "/home/admin/.local/bin/docker-compose -f victorciurana.com/docker-compose.prod.yml up --remove-orphans -d"
 
