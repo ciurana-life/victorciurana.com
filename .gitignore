@@ -9,7 +9,6 @@ key.json
 
 # envs -caches
 .pytest_cache
-.env
 .tox
 
 # My tools
