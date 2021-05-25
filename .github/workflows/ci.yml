@@ -63,22 +63,19 @@ jobs:
       # Cache?
       - name: Pull prod Docker image
         run: |
-          docker-compose -f docker-compose.prod.yml pull
-        # docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest
-        # docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy:latest
+          docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest
+          docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy:latest
 
       # If test pass build prod
       - name: Build prod Docker image
         run: |
-          sops exec-env .envs/.prod/.prod.env 'docker-compose -f docker-compose.prod.yml build'
-        # sops exec-env .envs/.prod/.prod.env 'docker build . -t \
-        #     eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest \
-        #     --cache-from eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest'
+          sops exec-env .envs/.prod/.prod.env 'docker build . -t \
+              eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest \
+              --cache-from eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest'
 
       # Push prod
       - name: Push prod to registry
-        run: docker-compose -f docker-compose.prod.yml push
-        # run: docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_web
+        run: docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_web
 
       # Prod changes with SSH
       - name: Pull prod on VM
