@@ -18,15 +18,7 @@ services:
         env_file:
             - .envs/.prod/.prod.dec.env
         depends_on:
-            - db
             - redis
-
-    db:
-        image: postgres:12.0-alpine
-        volumes:
-            - postgres_data:/var/lib/postgresql/data/
-        env_file:
-            - .envs/.prod/.prod.dec.env
 
     nginx-proxy:
         container_name: nginx-proxy
