@@ -66,12 +66,15 @@ jobs:
           docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest
           docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy:latest
 
+      # Sops seems to be failing arbitrarily
+      - name: Sops decrypt
+        run: sops --decrypt .envs/.prod/.prod.env > .envs/.prod/.prod.dec.env
+
       # If test pass build prod
       - name: Build prod Docker image
         run: |
-          sops exec-env .envs/.prod/.prod.env 'docker build . -t \
-              eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest \
-              --cache-from eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest'
+          docker build . -t eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest \
+            --cache-from eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest
 
       # Push prod
       - name: Push prod to registry
@@ -80,16 +83,15 @@ jobs:
       # Prod changes with SSH
       - name: Pull prod on VM
         run: |
-          docker-compose -H "ssh://admin@${{ secrets.SSH_HOSTS }}" -f docker-compose.prod.yml pull
-        # LD_LIBRARY_PATH=/usr/lib docker \
-        #     -H "ssh://admin@${{ secrets.SSH_HOSTS }}" pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest
+          docker -H "ssh://admin@${{ secrets.SSH_HOSTS }}" pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest
 
 
       # Up --recreate (GUARRADA)
       - name: Up prod on VM
         run: |
-          sops exec-env .envs/.prod/.prod.env 'ssh admin@${{ secrets.SSH_HOSTS }} \
-            "/home/admin/.local/bin/docker-compose -f victorciurana.com/docker-compose.prod.yml up --force-recreate --remove-orphans -d"'
+          ssh admin@${{ secrets.SSH_HOSTS }} \
+            "sops --decrypt .envs/.prod/.prod.env > .envs/.prod/.prod.dec.env; \
+            /home/admin/.local/bin/docker-compose -f victorciurana.com/docker-compose.prod.yml up --force-recreate --remove-orphans -d"
 
       - name: Remove unused prod VM
         run: docker -H "ssh://admin@${{ secrets.SSH_HOSTS }}" image prune -af

@@ -5,7 +5,7 @@
 
 .secrets
 key.json
-
+.envs/.prod/.prod.dec.env
 
 # envs -caches
 .pytest_cache
