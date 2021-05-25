@@ -28,15 +28,6 @@ services:
         env_file:
             - .envs/.prod/.prod.dec.env
 
-    # nginx:
-    #     build: ./deploytools/nginx
-    #     volumes:
-    #         - static_volume:/home/app/web/staticfiles
-    #     ports:
-    #         - 1337:80
-    #     depends_on:
-    #         - web
-
     nginx-proxy:
         container_name: nginx-proxy
         build: ./deploytools/nginx
@@ -63,7 +54,7 @@ services:
             - html:/usr/share/nginx/html
             - vhost:/etc/nginx/vhost.d
         depends_on:
-            - nginx-proxy
+            - "nginx-proxy"
 
     redis:
         image: redis:alpine
