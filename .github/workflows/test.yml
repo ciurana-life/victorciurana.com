@@ -1,0 +1,38 @@
+name: TEST
+
+on: [push]
+
+jobs:
+  test_job:
+    name: Run linting and tests on dev image
+    runs-on: ubuntu-latest
+
+    steps:
+      # Config steps
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Login GCP credentials
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          version: 298.0.0
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_email: ${{ secrets.GCP_EMAIL }}
+          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+          export_default_credentials: true
+
+      - name: Configure Docker
+        run: gcloud auth configure-docker --quiet
+
+      # Pull image to use as cache
+      - name: Pull GCR dev
+        run: docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev:latest
+      - name: Build dev docker for test on it
+        run: |
+          docker build . -t eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev:latest \
+            --cache-from eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev:latest
+
+      # Run tests
+      - name: Lint checks with black and flake8
+        run: docker-compose run web pytest --black app --flake8
+      - name: Pytest
+        run: docker-compose run web pytest
