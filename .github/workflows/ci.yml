@@ -68,7 +68,7 @@ jobs:
       # If test pass build prod
       - name: Build prod Docker image
         run: |
-          docker build . -t eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest \
+          docker build -f Dockerfile.prod . -t eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest \
             --cache-from eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest
 
       # Push prod
