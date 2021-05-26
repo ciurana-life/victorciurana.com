@@ -3,23 +3,91 @@ name: CI
 on: [push]
 
 jobs:
+
   build:
 
+    name: Build test and push to GCP registry
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.8, 3.9]
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+
+      # Set up checkout
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Set up SOPS
+      - name: Sops Binary Installer
+        uses: mdgreenwald/mozilla-sops-action@v1
+        id: install
+
+      # Set up SSH
+      - name: Install SSH
+        uses: shimataro/ssh-key-action@v2
         with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install dependencies
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
+      - name: Adding Known Hosts
+        run: ssh-keyscan -H ${{ secrets.SSH_HOSTS }} >> ~/.ssh/known_hosts
+
+      # Set up gcloud actions and log in
+      - name: Login GCP credentials
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          version: 298.0.0
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_email: ${{ secrets.GCP_EMAIL }}
+          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+          export_default_credentials: true
+
+      - name: Configure Docker
+        run: gcloud auth configure-docker --quiet
+
+      # Build for tests
+      - name: Pull GCR dev
+        run: docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev:latest
+      - name: Build dev docker for test on it
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements/requirements_dev.txt
-      - name: Run tests, flake8 & black
+          docker build . -t eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev:latest \
+            --cache-from eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev:latest
+
+      # Run liters and tests
+      - name: Lint checks with black and flake8
+        run: docker-compose run web pytest --black app --flake8
+      - name: Pytest
+        run: docker-compose run web pytest
+
+      # If tests pass push dev
+      - name: Push dev image
+        run: docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_web_dev
+
+      # Cache?
+      - name: Pull prod Docker image
         run: |
-          pytest --black app --flake8
+          docker pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest
+
+      # If test pass build prod
+      - name: Build prod Docker image
+        run: |
+          docker build -f Dockerfile.prod . -t eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest \
+            --cache-from eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest
+
+      # Push prod
+      - name: Push prod to registry
+        run: |
+          docker push eu.gcr.io/victor-ciurana-com/victorciuranacom_web
+
+      # Prod changes with SSH
+      - name: Pull prod on VM
+        run: |
+          docker -H "ssh://admin@${{ secrets.SSH_HOSTS }}" pull eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest
+
+      # Up --recreate (GUARRADA)
+      - name: Up prod on VM
+        run: |
+          ssh admin@${{ secrets.SSH_HOSTS }} "cd victorciurana.com/; sops --decrypt .envs/.prod/.prod.env > .envs/.prod/.prod.dec.env"
+          ssh admin@${{ secrets.SSH_HOSTS }} \
+            "/home/admin/.local/bin/docker-compose -f victorciurana.com/docker-compose.prod.yml up --remove-orphans -d"
+          ssh admin@${{ secrets.SSH_HOSTS }} \
+            "/home/admin/.local/bin/docker-compose -f victorciurana.com/docker-compose.prod.yml run web python manage.py shell -c 'from django.core.cache import cache; cache.clear()'"
+      - name: Remove unused prod VM
+        run: docker -H "ssh://admin@${{ secrets.SSH_HOSTS }}" image prune -af

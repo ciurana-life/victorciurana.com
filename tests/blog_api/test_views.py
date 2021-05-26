@@ -1,4 +1,5 @@
 import pytest
+from django.core.cache import cache
 from django.http import response
 from django.urls import reverse
 from rest_framework import status
@@ -19,6 +20,7 @@ def test_home_page_content_always_returns_last_or_empty(client):
     # Assert returns last object created
     HomePageContent.objects.create(content="1")
     HomePageContent.objects.create(content="2")
+    cache.clear()
     response = client.get(reverse("get_home_page_content", kwargs={"pk": 1}))
     assert response.data["content"] == "2"
     assert response.status_code == status.HTTP_200_OK

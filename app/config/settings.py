@@ -14,6 +14,9 @@ environ.Env.read_env(env_file=f"{BASE_DIR}/.env")
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env.str("SECRET_KEY", default="change-me-please-6234")
 
+# For deployment
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=False)
 
@@ -42,6 +45,15 @@ if DEBUG:
     INSTALLED_APPS.append("django_sass")
 
 MARTOR_THEME = "bootstrap"
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": env.str("REDIS_LOCATION"),
+        "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
+    }
+}
+
 
 # To show the toolbar buttons
 MARTOR_TOOLBAR_BUTTONS = [

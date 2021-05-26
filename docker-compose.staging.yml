@@ -6,24 +6,35 @@ services:
         build:
             context: ./
             dockerfile: Dockerfile.prod
-            cache_from:
-                - eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest
-        image:
-                  eu.gcr.io/victor-ciurana-com/victorciuranacom_web:latest
         command: gunicorn app.config.wsgi:application --bind 0.0.0.0:8000
         volumes:
             - static_volume:/home/app/web/staticfiles
         expose:
             - 8000
         env_file:
-            - .envs/.prod/.prod.dec.env
+            - .envs/.staging/.env.staging
         depends_on:
-            - redis
+            - db
+
+    db:
+        image: postgres:12.0-alpine
+        volumes:
+            - postgres_data:/var/lib/postgresql/data/
+        env_file:
+            - .envs/.staging/.env.staging.db
+
+    nginx:
+        build: ./deploytools/nginx
+        volumes:
+            - static_volume:/home/app/web/staticfiles
+        ports:
+            - 1337:80
+        depends_on:
+            - web
 
     nginx-proxy:
         container_name: nginx-proxy
         build: ./deploytools/nginx
-        # image: eu.gcr.io/victor-ciurana-com/victorciuranacom_nginx-proxy:latest
         restart: always
         ports:
             - 443:443
@@ -39,14 +50,14 @@ services:
     nginx-proxy-letsencrypt:
         image: jrcs/letsencrypt-nginx-proxy-companion
         env_file:
-            - .envs/.prod/.env.prod.proxy-companion
+            - .envs/.staging/.env.staging.proxy-companion
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock:ro
             - certs:/etc/nginx/certs
             - html:/usr/share/nginx/html
             - vhost:/etc/nginx/vhost.d
         depends_on:
-            - "nginx-proxy"
+            - nginx-proxy
 
     redis:
         image: redis:alpine

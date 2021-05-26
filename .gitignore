@@ -4,10 +4,11 @@
 #     https://www.atlassian.com/git/tutorials/saving-changes/gitignore
 
 .secrets
+key.json
+.envs/.prod/.prod.dec.env
 
 # envs -caches
 .pytest_cache
-.env
 .tox
 
 # My tools

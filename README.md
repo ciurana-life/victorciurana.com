@@ -2,83 +2,60 @@
 
 Project for [my blog](https://victorciurana.com).
 
+## How to install and run (easy way) ##
+Before you start make sure you have the following prerequisites:
+1. Docker, [download](https://docs.docker.com/engine/install/) and install for your os.
+2. Make:
+    - On OSX -> ```brew install make```
+    - On Ubuntu -> ```sudo apt-get install build-essential```
+    - Other linux -> Google it ;)
+3. Sops:
+    ```
+    curl -j -O -L https://github.com/mozilla/sops/releases/download/v3.7.1/sops_3.7.1_amd64.deb
+    apt install ./sops_3.7.1_amd64.deb
+    rm ./sops_3.7.1_amd64.deb
+    ```
 
-### Prerequisites ###
-You will need to search your Chromedriver for your chrome version and install it to be able to run the funcitonal tests. Also, you will need sudo.
 
-Another thing to have in mind is that funcional tests won't run correctly if you dont run __collectstatic__, because selenium won't find some elements to click.
-
-
-### How to run (local) ###
-__The current Python version is 3.8.3__
-Here is [a guide on how to install](https://tech.serhatteker.com/post/2019-12/how-to-install-python38-on-ubuntu/)
-
-Create the environment and install the requirements:
+Now you can just run the following command that will do everything for you:
 ```
-python3 -m venv env
-source env/bin/activate
-pip install -r requirements.txt
-```
-
-*create .env file with required variables*
-
-Collect static:
-```
-./manage.py collectstatic --no-input
+make d_local_install
 ```
 
-Migrations:
+If you want to edit the css run on a different terminal:
 ```
-./manage.py makemigrations
-./manage.py migrate
-```
-
-Run the project with:
-```
-./manage.py runserver
+make d_scss
 ```
 
-If you want to edit the styles run this in another terminal at the same time:
+Run tests:
 ```
-./manage.py sass static/sass/ templates/static/css/ --watch -t compressed
-```
-
-### Deploy notes tmp ###
-Move the nginx conf to /etc/nginx/sites-available/, then run:
-```
-cd ../sites-enabled
-sudo ln -s ../victorciurana.com .
+make d_test
 ```
 
-Move gunicorn conf:
+Any other command that requires ./manage.py:
 ```
-mv deploy_tools/gunicorn-systemd.template.service /etc/systemd/system/gunicorn-victorciurana.com.service
-sudo systemctl daemon-reload
-sudo systemctl enable gunicorn-victorciurana.com
-sudo systemctl start gunicorn-victorciurana.com
+docker-compose exec web python manage.py YOUR_COMMANDS
 ```
 
-Check all ok:
+For a list of all commands read the ```Makefile```.
+
+## How to install and run (no Docker, no make) ##
+You want it the hard way boy!
+
+Prerequisites:
+Install (poetry)[https://python-poetry.org/docs/#installation]
 ```
-sudo journalctl -u gunicorn-victorciurana.com
+https://python-poetry.org/docs/#installation
 ```
 
-Reload nginx:
+Once you have poetry you have to open a shell and install the requirements:
 ```
-sudo systemctl reload nginx
-```
-
-For reloading the app after any change:
-```
-sudo systemctl restart gunicorn-victorciurana.com
+poetry shell
+poetry install
 ```
 
-Follow [this post](https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-20-04) on how to put https.
-
-### TODO ###
-TODO:
-* Make changes so that my server still runs the code and serves the page.
-* Specify how to run with make, and how to istall make.
-* Make needs the sass command for developing.
-* Docker prod configuration
-* REST
+You can exit the shell with just ```exit```.
+Now you can run normal manage commands with:
+```
+poetry run ./manage.py YOUR_COMMAND
+```
