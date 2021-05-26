@@ -12,7 +12,11 @@ if not DEBUG:
     admin.site.__class__ = OTPAdminSite
 
 urlpatterns = [
-    re_path(r"^$", cache_page(60 * 60 * 24)(views.HomePageView.as_view()), name="home"),
+    re_path(
+        r"^$",
+        cache_page(60 * 60 * 24, key_prefix="blog")(views.HomePageView.as_view()),
+        name="home",
+    ),
     path("blog/", include("app.blog.urls")),
     path("blog_api/", include("app.blog_api.urls")),
     path("admin/", admin.site.urls),
