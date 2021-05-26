@@ -1,0 +1,16 @@
+name: TEST
+
+on: [push]
+
+jobs:
+  test_job:
+    name: Run linting and tests on dev image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Lint checks with black and flake8
+        run: docker-compose run web pytest --black app --flake8
+      - name: Pytest
+        run: docker-compose run web pytest

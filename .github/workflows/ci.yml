@@ -1,6 +1,9 @@
 name: CI
 
-on: [push]
+# Only trigger on pull request closed events
+on:
+  pull_request:
+    types: [ closed ]
 
 jobs:
 
@@ -8,6 +11,7 @@ jobs:
 
     name: Build test and push to GCP registry
     runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
 
     steps:
 
