@@ -87,6 +87,7 @@ jobs:
           ssh admin@${{ secrets.SSH_HOSTS }} "cd victorciurana.com/; sops --decrypt .envs/.prod/.prod.env > .envs/.prod/.prod.dec.env"
           ssh admin@${{ secrets.SSH_HOSTS }} \
             "/home/admin/.local/bin/docker-compose -f victorciurana.com/docker-compose.prod.yml up --remove-orphans -d"
-
+          ssh admin@${{ secrets.SSH_HOSTS }} \
+            "/home/admin/.local/bin/docker-compose -f victorciurana.com/docker-compose.prod.yml exec web python manage.py shell -c 'from django.core.cache import cache; cache.clear()'"
       - name: Remove unused prod VM
         run: docker -H "ssh://admin@${{ secrets.SSH_HOSTS }}" image prune -af
