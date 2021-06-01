@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django_otp.plugins.otp_totp",
     "app.blog",
     "app.blog_api",
+    "app.newsletter",
 ]
 
 # Nothing more permanent than a temporary fix
@@ -179,3 +180,9 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_THROTTLE_RATES": {"anon": "100/minute", "user": "1000/minute"},
 }
+
+CELERY_BROKER_URL = "redis://redis:6379"
+CELERY_RESULT_BACKEND = "redis://redis:6379"
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TASK_SERIALIZER = "json"

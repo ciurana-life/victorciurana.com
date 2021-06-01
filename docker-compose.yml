@@ -20,6 +20,15 @@ services:
       - db
       - redis
 
+  worker:
+    build:
+      context: ./
+    command: celery -A app.config  worker -l INFO
+    env_file:
+      - .envs/.local/.env.dev
+    depends_on:
+      - redis
+
   db:
     image: postgres:12.0-alpine
     volumes:

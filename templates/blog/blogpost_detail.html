@@ -10,36 +10,43 @@
 
 {% block main %}
     <article class="full_article">
-      <time datetime="{{object.created_at}}" class="horizontal_time">{{object.created_at | date}}</time>
-      <div class="article_content">
-        {{object.content | safe_markdown}}
-        <address class="author">
-            Written with ❤️ by
-            <a rel="author" target="_blank" href="https://twitter.com/ciurana_life">
-                Victor Ciurana
-            </a>
-        </address>
-      </div>
+        <time datetime="{{object.created_at}}" class="horizontal_time">{{object.created_at | date}}</time>
+        <div class="article_content">
+            {{object.content | safe_markdown}}
+            <address class="author">
+                Written with ❤️ by
+                <a rel="author" target="_blank" href="https://twitter.com/ciurana_life">
+                    Victor Ciurana
+                </a>
+            </address>
+        </div>
     </article>
+
+    <!-- NEWSLETTER -->
+    {% include 'newsletter/form.html'%}
 {% endblock main %}
 
 {% block css %}
-    <style>{% include '../static/css/github.stye.min.css' %}</style>
+<style>
+    {
+        % include '../static/css/github.stye.min.css'%
+    }
+</style>
 {% endblock css %}
 
 
 {% block js %}
-    <!-- Inline js for code highlight -->
-    <script>{% include '../static/js/highlight.min.js' %}</script>
-    <script>{% include '../static/js/linenum.min.js' %}</script>
-    <script>
-        // Code highlight
-        document.addEventListener('DOMContentLoaded', (event) => {
-            document.querySelectorAll('code.language-python').forEach((block) => {
-                hljs.highlightBlock(block);
-            });
+<!-- Inline js for code highlight -->
+<script>{% include '../static/js/highlight.min.js' %}</script>
+<script>{% include '../static/js/linenum.min.js' %}</script>
+<script>
+    // Code highlight
+    document.addEventListener('DOMContentLoaded', (event) => {
+        document.querySelectorAll('code.language-python').forEach((block) => {
+            hljs.highlightBlock(block);
         });
-        // Code line numbers init
-        hljs.initLineNumbersOnLoad();
-    </script>
+    });
+    // Code line numbers init
+    hljs.initLineNumbersOnLoad();
+</script>
 {% endblock %}

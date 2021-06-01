@@ -3,6 +3,7 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView, ListView, TemplateView
 
+from app.newsletter.views import EmailSubscriptionFormView as MailSub
 from .models import BlogPost, HomePageContent
 
 
@@ -12,7 +13,7 @@ class CsrfExemptView(View):
         return super(CsrfExemptView, self).dispatch(request, *args, **kwargs)
 
 
-class HomePageView(CsrfExemptView, TemplateView):
+class HomePageView(CsrfExemptView, MailSub, TemplateView):
     template_name = "index.html"
 
     def get_context_data(self, **kwargs):
@@ -27,6 +28,6 @@ class BlogPostListView(CsrfExemptView, ListView):
     template_name = "blog/blogpost_list.html"
 
 
-class BlogPostDetailView(CsrfExemptView, DetailView):
+class BlogPostDetailView(CsrfExemptView, MailSub, DetailView):
     model = BlogPost
     template_name = "blog/blogpost_detail.html"

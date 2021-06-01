@@ -1,0 +1,14 @@
+{% extends 'base.html'%}
+
+{% block header %}
+Newsletter subscription
+{% endblock header %}
+
+{% block main %}
+<article>
+    <div class="article_content">
+        <p>We have sent you a new email, please click on the link it contains to validate your email account or you won’t receive blog post updates.</p>
+        <a href="{% url 'home' %}" >Go back to the homepage.</a>
+    </div>
+</article>
+{% endblock main %}

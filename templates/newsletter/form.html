@@ -1,0 +1,11 @@
+<article>
+    <div class="article_content">
+        <h3>Newsletter</h3>
+        <p>Get the latest posts directly to your inbox.</p>
+        <form action="/newsletter/subscribe/" method="post">
+            {% csrf_token %}
+            {{ form }}
+            <input class="btn" type="submit" value="Submit">
+        </form>
+    </div>
+</article>

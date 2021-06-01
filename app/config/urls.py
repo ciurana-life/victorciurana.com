@@ -19,6 +19,7 @@ urlpatterns = [
     ),
     path("blog/", include("app.blog.urls")),
     path("blog_api/", include("app.blog_api.urls")),
+    path("newsletter/", include("app.newsletter.urls")),
     path("admin/", admin.site.urls),
     path("martor/", include("martor.urls")),
     path("api-auth", include("rest_framework.urls", namespace="rest_framework")),
