@@ -35,26 +35,24 @@ def test_pagination_setting_10():
 
 @pytest.mark.django_db
 def test_get_all_blog_posts_and_paginates(client, blog_posts):
-    response = client.get(reverse("get_blog_post_list") + "?page=2")
+    response = client.get("/blog_api/blogposts/?page=2")
     assert response.status_code == status.HTTP_200_OK
 
 
 @pytest.mark.django_db
 def test_get_blog_post_detail(client, blog_posts):
-    response = client.get(reverse("get_blog_post_detail", kwargs={"slug": "title_0"}))
+    response = client.get("/blog_api/blogposts/46/")
     assert response.status_code == status.HTTP_200_OK
 
 
 @pytest.mark.django_db
 def test_get_blog_post_detail_404(client):
-    response = client.get(reverse("get_blog_post_detail", kwargs={"slug": "lorem"}))
+    response = client.get("/blog_api/blogposts/50/")
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
 
 @pytest.mark.django_db
 def test_get_blog_post_prevents_post(factory):
-    request = factory.post(
-        reverse("get_blog_post_detail", kwargs={"slug": "title_0"}), {"title": "lorem"}
-    )
+    request = factory.post("/blog_api/blogposts/15", {"title": "lorem"})
     response = BlogPostDetailView.as_view()(request)
     assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED
