@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "django_otp",
     "django_otp.plugins.otp_totp",
+    "corsheaders",
     "app.blog",
     "app.blog_api",
 ]
@@ -76,6 +77,7 @@ MARTOR_TOOLBAR_BUTTONS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -185,3 +187,6 @@ if DEBUG:
     REST_FRAMEWORK["DEFAULT_RENDERER_CLASSES"].append(
         "rest_framework.renderers.BrowsableAPIRenderer"
     )
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_METHODS = ["GET"]
