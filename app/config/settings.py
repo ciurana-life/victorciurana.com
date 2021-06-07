@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "django_otp",
     "django_otp.plugins.otp_totp",
+    "corsheaders",
     "app.blog",
     "app.blog_api",
 ]
@@ -76,6 +77,7 @@ MARTOR_TOOLBAR_BUTTONS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -169,6 +171,7 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
+    "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
     "DEFAULT_PERMISSION_CLASSES": [],
@@ -179,3 +182,11 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_THROTTLE_RATES": {"anon": "100/minute", "user": "1000/minute"},
 }
+
+if DEBUG:
+    REST_FRAMEWORK["DEFAULT_RENDERER_CLASSES"].append(
+        "rest_framework.renderers.BrowsableAPIRenderer"
+    )
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_METHODS = ["GET"]
