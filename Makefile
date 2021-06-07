@@ -18,6 +18,7 @@ D_MANAGE = docker-compose exec web python manage.py
 d_local_install:
 	@echo "${GREEN}[#] STARTING LOCAL DOCKER INSTALL${RESET}"
 	chmod +x entrypoint.sh
+	docker-compose pull
 	docker-compose build
 	docker-compose up -d --build
 	$(D_MANAGE) makemigrations

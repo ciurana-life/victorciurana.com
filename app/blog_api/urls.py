@@ -1,22 +1,17 @@
 from django.urls import path
 from django.views.decorators.cache import cache_page
+from rest_framework import routers
 
-from .views import BlogPostDetailView, BlogPostListView, HomePageContentView
+from .views import HomePageContentView, BlogPostViewSet
 
 urlpatterns = [
     path(
         "home_page_content/<int:pk>",
         cache_page(60 * 60 * 24, key_prefix="blog")(HomePageContentView.as_view()),
         name="get_home_page_content",
-    ),
-    path(
-        "blog_post_list/",
-        cache_page(60 * 60 * 24, key_prefix="blog")(BlogPostListView.as_view()),
-        name="get_blog_post_list",
-    ),
-    path(
-        "blog_post_detail/<slug:slug>",
-        cache_page(60 * 60 * 24, key_prefix="blog")(BlogPostDetailView.as_view()),
-        name="get_blog_post_detail",
-    ),
+    )
 ]
+
+router = routers.SimpleRouter()
+router.register(r"blogposts", BlogPostViewSet, basename="BlogPost")
+urlpatterns += router.urls

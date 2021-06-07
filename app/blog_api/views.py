@@ -1,5 +1,10 @@
+from django.shortcuts import get_object_or_404
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from rest_framework import generics
+from rest_framework import viewsets
 from rest_framework.filters import OrderingFilter
+from rest_framework.response import Response
 
 from app.blog.models import BlogPost, HomePageContent
 
@@ -18,22 +23,24 @@ class HomePageContentView(generics.RetrieveAPIView):
         return self.queryset.last()
 
 
-class BlogPostListView(generics.ListAPIView):
+class BlogPostViewSet(viewsets.ViewSet):
     """
-    List all BlogPost objects, paginated (10)
-    """
-
-    queryset = BlogPost.objects.all()
-    serializer_class = BlogPostSerializer
-    filter_backends = [OrderingFilter]
-    ordering_fields = ["created_at"]
-
-
-class BlogPostDetailView(generics.RetrieveAPIView):
-    """
-    Retrieve single BlogPost object
+    Lists or retrievews BlogPost objects.
     """
 
-    queryset = BlogPost.objects.all()
-    serializer_class = BlogPostSerializer
-    lookup_field = "slug"
+    @method_decorator(cache_page(60 * 60 * 24, key_prefix="blog"))
+    def list(self, request: any) -> Response:
+        queryset = (
+            BlogPost.objects.all()
+            .values("id", "title", "created_at")
+            .order_by("-created_at")
+        )
+        serializer = BlogPostSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    @method_decorator(cache_page(60 * 60 * 24, key_prefix="blog"))
+    def retrieve(self, request: any, pk: int = None) -> Response:
+        queryset = BlogPost.objects.all()
+        blogpost = get_object_or_404(queryset, pk=pk)
+        serializer = BlogPostSerializer(blogpost)
+        return Response(serializer.data)
